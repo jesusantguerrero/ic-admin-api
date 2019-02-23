@@ -1,5 +1,7 @@
 'use strict'
 
+const CrudController = require('./CrudController');
+
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
@@ -7,8 +9,9 @@
 /**
  * Resourceful controller for interacting with tickets
  */
-class BaseController {
+class BaseController extends CrudController {
   constructor(model) {
+    super(model);
     this.model = model;
   }
   /**
@@ -21,6 +24,12 @@ class BaseController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
+    const query = request.get();
+    
+    if (Object.keys(query).length) {
+      let modelQuery = this.getModelQuery(query);
+      return response.json(await modelQuery.fetch());
+    }
     response.json(await this.model.all());
   }
 
@@ -86,9 +95,9 @@ class BaseController {
   async update ({ params, request, response }) {
     const resource = await this.model.find(params.id)
     if (!resource) {
-      response.status(400).json({
+      return response.status(400).json({
         status: {
-          message: "User nor found"
+          message: "resource not found"
         }
       });
 
@@ -99,14 +108,14 @@ class BaseController {
     try{
      await resource.save()
     } catch(e) {
-      response.status(400).json({
+      return response.status(400).json({
         status: {
           message: e
         }
       });
     }
 
-    response.json(resource)
+    return response.json(resource)
   }
 
   /**
