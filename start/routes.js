@@ -20,8 +20,10 @@ Route.on('/').render('welcome')
 
 Route.group(() => {
     Route.resource('items', 'ItemController').apiOnly()
+    // issues section
     Route.resource('tickets', 'TicketController').apiOnly()
     Route.resource('labels', 'LabelController').apiOnly()
+    Route.resource('milestones', 'MilestoneController').apiOnly()
 }).prefix('api/v1').middleware('auth')
 
 
