@@ -16,14 +16,14 @@ class AuthController {
 
         } catch (e) {
             console.log(e);
-            return response.json({
+            return response.status(400).json({
                 status: {
-                    message: e
+                    message: e.sqlMessage
                 }
-            }).status(400);
+            });
         }
 
-        return "saaved";
+        return "saved";
     }
 }
 
