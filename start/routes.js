@@ -21,6 +21,7 @@ Route.on('/').render('welcome')
 Route.group(() => {
     Route.resource('items', 'ItemController').apiOnly()
     Route.resource('tickets', 'TicketController').apiOnly()
+    Route.resource('labels', 'LabelController').apiOnly()
 }).prefix('api/v1').middleware('auth')
 
 
