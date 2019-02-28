@@ -21,6 +21,7 @@ Route.on('/').render('welcome')
 Route.group(() => {
     Route.resource('items', 'ItemController').apiOnly()
     // issues section
+    Route.resource('users', 'UserController').apiOnly()
     Route.resource('tickets', 'TicketController').apiOnly()
     Route.resource('labels', 'LabelController').apiOnly()
     Route.resource('milestones', 'MilestoneController').apiOnly()
@@ -31,4 +32,8 @@ Route.group(() => {
   Route.post('login', 'AuthController.login')
   Route.post('registration', 'AuthController.registration')
 }).prefix('api/v1/auth').middleware('guest')
+
+Route.group(() => {
+  Route.get('user', 'AuthController.currentUser')
+}).prefix('api/v1/auth').middleware('auth')
 

@@ -5,11 +5,10 @@ class AuthController {
     async login ({ auth, request, response }) {
         const { email, password } = request.all();
         const token = await auth.attempt(email, password);
-    
         return response.json(token);
     }
 
-    async registration ({ auth, request, response }) {
+    async registration ({request, response }) {
         const credentials = request.all();
         try {
             const user = await User.create(credentials) 
@@ -24,6 +23,14 @@ class AuthController {
         }
 
         return "saved";
+    }
+
+    async currentUser ({auth}) {
+        try {
+            return await auth.getUser()
+          } catch (error) {
+            response.send('Missing or invalid jwt token')
+        }
     }
 }
 
