@@ -20,11 +20,19 @@ Route.on('/').render('welcome')
 
 Route.group(() => {
     Route.resource('items', 'ItemController').apiOnly()
-    // issues section
+    
+    // Company Section
     Route.resource('users', 'UserController').apiOnly()
+    Route.resource('companies', 'CompanyController').apiOnly()
+    
+    // Business
+    Route.resource('routers', 'RouterController').apiOnly()
+    
+    // issues section
     Route.resource('tickets', 'TicketController').apiOnly()
     Route.resource('labels', 'LabelController').apiOnly()
     Route.resource('milestones', 'MilestoneController').apiOnly()
+
 }).prefix('api/v1').middleware('auth')
 
 

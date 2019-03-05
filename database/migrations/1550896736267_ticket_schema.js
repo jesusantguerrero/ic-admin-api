@@ -7,6 +7,7 @@ class TicketSchema extends Schema {
   up () {
     this.create('tickets', (table) => {
       table.increments()
+      table.integer('id_company').unsigned().references('id').inTable('companies');
       table.integer("assigned_id").unsigned().references('id').inTable('users')
       table.integer("reporter_id").unsigned().references('id').inTable('users')
       table.integer("milestone_id").unsigned()

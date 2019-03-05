@@ -7,9 +7,12 @@ class ContractSchema extends Schema {
   up () {
     this.create('contracts', (table) => {
       table.increments()
-      table.integer('id_usuario').references('id').inTable('users');
-      table.integer('id_cliente').references('id').inTable('clients');
-      table.integer('id_servicio').references('id').inTable('services');
+      table.integer('id_company').unsigned().references('id').inTable('companies');
+      table.integer('id_usuario').unsigned().references('id').inTable('users');
+      table.integer('id_cliente').unsigned().references('id').inTable('clients');
+      table.integer('id_servicio').unsigned().references('id').inTable('services');
+      table.integer('id_precio').unsigned().references('id').inTable('prices');
+      table.integer('id_ip').unsigned().references('id').inTable('ips');
       table.string('codigo', 6);
       table.date('fecha');
       table.integer('duracion');
@@ -19,7 +22,6 @@ class ContractSchema extends Schema {
       table.string('modelo', 50);
       table.string('router', 50);
       table.string('mac_router', 50);
-      table.string('ip', 15);
       table.boolean('instalado');
       table.text('observaciones');
       table.date('fecha_suspencion');

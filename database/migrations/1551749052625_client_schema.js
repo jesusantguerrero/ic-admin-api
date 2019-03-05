@@ -7,6 +7,7 @@ class ClientSchema extends Schema {
   up () {
     this.create('clients', (table) => {
       table.increments()
+      table.integer('id_company').unsigned().references('id').inTable('companies');
       table.string('nombres', 60);
       table.string('apellidos', 60);
       table.string('cedula', 20);

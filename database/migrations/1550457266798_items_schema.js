@@ -7,6 +7,7 @@ class ItemsSchema extends Schema {
   up () {
     this.create('items', (table) => {
       table.increments()
+      table.integer('id_company').unsigned().references('id').inTable('companies');
       table.string('name', 100)
       table.text('description')
       table.decimal('price', 2)

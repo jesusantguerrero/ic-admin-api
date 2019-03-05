@@ -7,6 +7,7 @@ class LabelSchema extends Schema {
   up () {
     this.create('labels', (table) => {
       table.increments()
+      table.integer('id_company').unsigned().references('id').inTable('companies');
       table.string('title', 100)
       table.text('description')
       table.string("color", 50)

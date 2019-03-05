@@ -1,6 +1,7 @@
 'use strict'
 
 const CrudController = require('./CrudController');
+const Event = use('Event');
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -10,9 +11,10 @@ const CrudController = require('./CrudController');
  * Resourceful controller for interacting with tickets
  */
 class BaseController extends CrudController {
-  constructor(model) {
+  constructor(model, modelName = '') {
     super(model);
     this.model = model;
+    this.modelName = modelName;
   }
   /**
    * Show a list of all tickets.
@@ -23,7 +25,7 @@ class BaseController extends CrudController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
+  async index ({request, response, view }) {
     const query = request.get();
     
     if (Object.keys(query).length) {
@@ -53,11 +55,17 @@ class BaseController extends CrudController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
+  async store ({ auth, request, response }) {
     const formData = request.all();
+    const userData = await auth.getUser()
+    formData.id_company = userData.id_company;
+
     let resource;
     try {
         resource = await this.model.create(formData) 
+        if (this.modelName) {
+          Event.fire(`new::{this.modelName}`, resource)
+        }
 
     } catch (e) {
         return response.status(400).json({
