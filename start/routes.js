@@ -24,9 +24,14 @@ Route.group(() => {
     // Company Section
     Route.resource('users', 'UserController').apiOnly()
     Route.resource('companies', 'CompanyController').apiOnly()
+    Route.resource('clients', 'ClientController').apiOnly()
     
     // Business
     Route.resource('routers', 'RouterController').apiOnly()
+    Route.resource('services', 'ServiceController').apiOnly()
+    Route.resource('prices', 'PriceController').apiOnly()
+    Route.resource('contracts', 'ContractController').apiOnly()
+    Route.resource('payments', 'PaymentController').apiOnly()
     
     // issues section
     Route.resource('tickets', 'TicketController').apiOnly()

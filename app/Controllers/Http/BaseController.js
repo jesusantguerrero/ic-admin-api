@@ -63,9 +63,7 @@ class BaseController extends CrudController {
     let resource;
     try {
         resource = await this.model.create(formData) 
-        if (this.modelName) {
-          Event.fire(`new::{this.modelName}`, resource)
-        }
+        resource = await this.model.find(resource.id) 
 
     } catch (e) {
         return response.status(400).json({
@@ -75,6 +73,9 @@ class BaseController extends CrudController {
         });
     }
 
+    if (this.modelName) {
+      Event.fire(`new::${this.modelName}`, resource)
+    }
     return response.json(resource);
   }
 
@@ -88,6 +89,12 @@ class BaseController extends CrudController {
    * @param {View} ctx.view
    */
   async show ({ params, request, response, view }) {
+    const query = request.get();
+    
+    if (Object.keys(query).length) {
+      let modelQuery = this.getModelQuery(query);
+      return response.json(await modelQuery.where({id: params.id}).fetch());
+    }
     response.json(await this.model.find(params.id))
   }
 
@@ -114,7 +121,10 @@ class BaseController extends CrudController {
     resource.merge(request.all());
 
     try{
-     await resource.save()
+     await resource.save();
+      if (this.modelName) {
+        Event.fire(`updated::${this.modelName}`, resource)
+      }
     } catch(e) {
       return response.status(400).json({
         status: {
@@ -148,14 +158,14 @@ class BaseController extends CrudController {
     try{
      await resource.delete()
     } catch(e) {
-      response.status(400).json({
+      return response.status(400).json({
         status: {
-          message: e
+          message: e.sqlMessage
         }
       });
     }
 
-    response.json(resource)
+    return response.json(resource)
   }
 }
 

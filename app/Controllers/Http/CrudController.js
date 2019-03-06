@@ -14,6 +14,7 @@ class CrudController {
   
   getModelQuery(query) {
     const relationships = this.getRelationships(query.relationships);
+    console.log(relationships);
 
     const modelQuery = this.model.query();
     if (relationships) {

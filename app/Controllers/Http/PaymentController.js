@@ -1,6 +1,6 @@
 'use strict'
 const BaseController = require('./BaseController');
-const Router = use('App/Models/Router')
+const Payment = use('App/Models/Payment')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -9,10 +9,10 @@ const Router = use('App/Models/Router')
 /**
  * Resourceful controller for interacting with tickets
  */
-class RouterController extends BaseController {
+class PaymentController extends BaseController {
     constructor() {
-        super(Router, 'router')
+        super(Payment, 'payment')
     }
 }
 
-module.exports = RouterController
+module.exports = PaymentController

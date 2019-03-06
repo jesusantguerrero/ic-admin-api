@@ -1,3 +1,3 @@
 const Event = use('Event')
 
-Event.on('new::router', 'Router.createIps')
+Event.once('new::router', 'Router.createIps')

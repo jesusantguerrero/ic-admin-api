@@ -1,18 +1,18 @@
 'use strict'
 const BaseController = require('./BaseController');
-const Router = use('App/Models/Router')
+const Price = use('App/Models/Price')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 /**
- * Resourceful controller for interacting with tickets
+ * Resourceful controller for interacting with prices
  */
-class RouterController extends BaseController {
+class PriceController extends BaseController {
     constructor() {
-        super(Router, 'router')
+        super(Price, 'price')
     }
 }
 
-module.exports = RouterController
+module.exports = PriceController
