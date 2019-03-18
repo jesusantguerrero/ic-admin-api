@@ -18,7 +18,7 @@ const Route = use('Route')
 
 Route.on('/').render('welcome')
 
-Route.on('/api/v1/status', ({
+Route.on('api/v1/status', ({
   response
 }) => {
   response.json({
