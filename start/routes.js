@@ -28,6 +28,7 @@ Route.group(() => {
     
     // Business
     Route.resource('routers', 'RouterController').apiOnly()
+    Route.resource('ipAddresses', 'IpAdressController').apiOnly()
     Route.resource('services', 'ServiceController').apiOnly()
     Route.resource('prices', 'PriceController').apiOnly()
     Route.resource('contracts', 'ContractController').apiOnly()
