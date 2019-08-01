@@ -18,6 +18,14 @@ const Route = use('Route')
 
 Route.on('/').render('welcome')
 
+Route.on('api/v1/status', ({
+  response
+}) => {
+  response.json({
+    "status": "working"
+  })
+})
+
 Route.group(() => {
     Route.resource('items', 'ItemController').apiOnly()
     
@@ -28,7 +36,7 @@ Route.group(() => {
     
     // Business
     Route.resource('routers', 'RouterController').apiOnly()
-    Route.resource('ipAddresses', 'IpAdressController').apiOnly()
+    Route.resource('ip-addresses', 'IpAdressController').apiOnly()
     Route.resource('services', 'ServiceController').apiOnly()
     Route.resource('prices', 'PriceController').apiOnly()
     Route.resource('contracts', 'ContractController').apiOnly()
@@ -38,6 +46,9 @@ Route.group(() => {
     Route.resource('tickets', 'TicketController').apiOnly()
     Route.resource('labels', 'LabelController').apiOnly()
     Route.resource('milestones', 'MilestoneController').apiOnly()
+    
+    // toggl timing
+    Route.resource('time-entries', 'TimeEntryController').apiOnly()
 
 }).prefix('api/v1').middleware('auth')
 
@@ -45,9 +56,8 @@ Route.group(() => {
 Route.group(() => {
   Route.post('login', 'AuthController.login')
   Route.post('registration', 'AuthController.registration')
-}).prefix('api/v1/auth').middleware('guest')
+}).prefix('api/v1/auth')
 
 Route.group(() => {
   Route.get('user', 'AuthController.currentUser')
 }).prefix('api/v1/auth').middleware('auth')
-
