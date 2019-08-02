@@ -1,10 +1,10 @@
 'use strict'
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model')
+const BaseModel = require('./BaseModel')
 
 
-class Ticket extends Model {
+class Ticket extends BaseModel {
     reporter() {
         return this.belongsTo('App/Models/User', 'reporter_id')
     }

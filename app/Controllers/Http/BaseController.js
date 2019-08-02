@@ -29,9 +29,10 @@ class BaseController extends CrudController {
     const query = request.get();
     
     if (Object.keys(query).length) {
-      let modelQuery = this.getModelQuery(query);
+      let modelQuery = this.model.getFromQuery(query);
       return response.json(await modelQuery.fetch());
     }
+
     response.json(await this.model.all());
   }
 
