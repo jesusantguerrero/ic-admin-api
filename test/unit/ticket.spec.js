@@ -8,7 +8,7 @@ trait('Test/ApiClient')
 trait('Auth/Client')
 
 test('get list of tickets', async ({ client }) => {
-  const user = await User.find(1)
+  const user = await User.find(3)
   const response = await client
   .get('/api/v1/tickets')
   .loginVia(user, 'jwt')

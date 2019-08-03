@@ -1,6 +1,5 @@
 'use strict'
 
-const CrudController = require('./CrudController');
 const Event = use('Event');
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -10,9 +9,8 @@ const Event = use('Event');
 /**
  * Resourceful controller for interacting with tickets
  */
-class BaseController extends CrudController {
+class BaseController  {
   constructor(model, modelName = '') {
-    super(model);
     this.model = model;
     this.modelName = modelName;
   }
@@ -29,8 +27,7 @@ class BaseController extends CrudController {
     const query = request.get();
     
     if (Object.keys(query).length) {
-      let modelQuery = this.model.getFromQuery(query);
-      return response.json(await modelQuery.fetch());
+      return response.json(await this.model.getFromQuery(query));
     }
 
     response.json(await this.model.all());

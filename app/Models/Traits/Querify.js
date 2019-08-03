@@ -13,8 +13,10 @@ class Querify {
     let modelQuery = this.model.query();
     modelQuery = this.getRelationships(query.relationships, modelQuery);
     modelQuery = this.getFilters(query.filter, modelQuery);
+    modelQuery = this.getSorts(query.sort, modelQuery);
+    modelQuery = this.getPaginate(query.limit, query.page, modelQuery);
 
-  return modelQuery;
+    return modelQuery;
 }
 
 /**
@@ -36,7 +38,6 @@ getRelationships(relationships, modelQuery) {
 
 getFilters(filters, modelQuery) {
   if (filters) {
-    console.log(filters)
     filters = Object.entries(filters);
     filters.forEach( filter => {
       const [field, value] = filter;
@@ -45,6 +46,29 @@ getFilters(filters, modelQuery) {
   }
 
   return modelQuery
+}
+
+getSorts(sorts, modelQuery) {
+  if (sorts) {
+    sorts = this.splitAndTrim(sorts);
+    sorts.forEach( sort => {
+      const direction = sort.slice(0,1) == "-" ? "DESC" : "ASC";
+      sort = direction == "ASC" ? sort : sort.slice(1);
+      modelQuery.orderBy(sort, direction);
+    })
+  }
+
+  return modelQuery
+}
+
+getPaginate(limit, page, modelQuery) {
+  if (limit && page) {
+    return modelQuery.paginate(page, limit);
+  } else if (limit) {
+    modelQuery.limit(limit);
+  }
+
+  return modelQuery.fetch();
 }
 
 
@@ -78,6 +102,10 @@ getFilters(filters, modelQuery) {
       }
     })
 
+  }
+
+  splitAndTrim(text, separator = ',') {
+    return text.split(',').map( optional => optional.trim());
   }
 }
 
