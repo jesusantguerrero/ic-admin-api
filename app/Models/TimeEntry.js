@@ -1,7 +1,7 @@
 'use strict'
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = require('./BaseModel')
+const Model = use('Freesgen/Adonis/BaseModel')
 const Database = use('Database')
 
 class TimeEntry extends Model {
