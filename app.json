@@ -1,0 +1,58 @@
+{
+  "addons": [
+    "jawsdb"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "env": {
+    "APP_KEY": {
+      "required": true
+    },
+    "APP_URL": {
+      "required": true
+    },
+    "DB_CONNECTION": {
+      "required": true
+    },
+    "DB_DATABASE": {
+      "required": true
+    },
+    "DB_HOST": {
+      "required": true
+    },
+    "DB_PASSWORD": {
+      "required": true
+    },
+    "DB_PORT": {
+      "required": true
+    },
+    "DB_USER": {
+      "required": true
+    },
+    "ENV_SILENT": {
+      "required": true
+    },
+    "HOST": {
+      "required": true
+    },
+    "JAWSDB_URL": {
+      "required": true
+    },
+    "NODE_ENV": {
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "name": "ic-admin-api",
+  "scripts": {
+    "postdeploy": "npx adonis migration:run"
+  },
+  "stack": "heroku-18"
+}
