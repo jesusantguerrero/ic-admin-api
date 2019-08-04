@@ -9,7 +9,7 @@ class Querify {
   }
 
   getModelQuery(query) {
-    
+    console.log(query)
     let modelQuery = this.model.query();
     modelQuery = this.getRelationships(query.relationships, modelQuery);
     modelQuery = this.getFilters(query.filter, modelQuery);
@@ -49,6 +49,7 @@ getFilters(filters, modelQuery) {
 }
 
 getSorts(sorts, modelQuery) {
+  console.log(sorts);
   if (sorts) {
     sorts = this.splitAndTrim(sorts);
     sorts.forEach( sort => {

@@ -10,7 +10,7 @@ class TimeEntrySchema extends Schema {
       table.integer('id_company').unsigned().references('id').inTable('companies');
       table.integer("user_id").unsigned().references('id').inTable('users')
       table.integer("milestone_id").unsigned()
-      table.integer("label_id").unsigned()
+      table.json("label_ids").unsigned()
       table.text("description")
       table.boolean("billable").default(false)
       table.timestamp("start")

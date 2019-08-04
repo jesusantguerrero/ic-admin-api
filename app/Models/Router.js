@@ -1,7 +1,7 @@
 'use strict'
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = use('Model')
+const Model = require('./BaseModel')
 const Ip = use('App/Models/Ip')
 
 class Router extends Model {

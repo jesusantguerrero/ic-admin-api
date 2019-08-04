@@ -23,14 +23,18 @@ class BaseController  {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({request, response, view }) {
-    const query = request.get();
+  async index ({request, response, auth}) {
+    let query = request.get();
+    const userData = await auth.getUser()
     
-    if (Object.keys(query).length) {
-      return response.json(await this.model.getFromQuery(query));
+    if (query.filter) { 
+      query.filter.id_company = userData.id_company.toString()
+    } else {
+      query.filter = { id_company: userData.id_company.toString()}
     }
 
-    response.json(await this.model.all());
+    console.log(query)
+      return response.json(await this.model.getFromQuery(query));
   }
 
   /**
