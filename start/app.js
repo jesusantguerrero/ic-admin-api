@@ -21,7 +21,7 @@ const providers = [
   '@adonisjs/session/providers/SessionProvider',
   '@adonisjs/auth/providers/AuthProvider',
   '@adonisjs/websocket/providers/WsProvider',
-  'adonisjs-querify/providers/Provider'
+  path.join(__dirname, '..', 'providers', 'Querify/Provider')
 ]
 
 /*

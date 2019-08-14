@@ -52,6 +52,11 @@ Route.group(() => {
 
 }).prefix('api/v1').middleware('auth')
 
+Route.group(() => {
+    // toggl timing
+    Route.resource('timers', 'TimerController').apiOnly()
+}).prefix('api')
+
 
 Route.group(() => {
   Route.post('login', 'AuthController.login')
