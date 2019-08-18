@@ -28,8 +28,9 @@
     "@adonisjs/shield": "^1.0.8",
     "@adonisjs/vow": "^1.0.17",
     "@adonisjs/websocket": "^1.0.11",
-    "adonisjs-querify": "^1.0.0",
-    "mysql": "^2.16.0"
+    "adonisjs-querify": "^1.1.1",
+    "mysql": "^2.16.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {},
   "autoload": {

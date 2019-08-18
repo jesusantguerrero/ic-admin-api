@@ -6,12 +6,12 @@ const Schema = use('Schema')
 class Priceschema extends Schema {
   up () {
     this.create('prices', (table) => {
-      table.increments()
-      table.integer('id_company').unsigned().references('id').inTable('companies')
-      table.integer('id_servicio').unsigned().references('id').inTable('services');
-      table.text('descripcion');
-      table.decimal('monto', 11, 2);
-      table.boolean('activo').default(1);
+      table.uuid('id').primary()
+      table.uuid('company_id', 36).references('id').inTable('companies')
+      table.uuid('service_id', 36).references('id').inTable('services');
+      table.text('description');
+      table.decimal('amount', 11, 2);
+      table.boolean('active').default(1);
       table.timestamps()
     })
   }

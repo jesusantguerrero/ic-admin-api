@@ -1,6 +1,7 @@
 'use strict'
 
 const Event = use('Event');
+const Database = use('Database')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -37,25 +38,35 @@ class BaseController  {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
+
+  async store ({ auth, request, response }) {
     const formData = request.all();
-
     let resource;
+    
+    if (this.model.customCreationHook && auth) {
+      this.model.customCreationHook(formData, auth)
+    }
+    
+    const transaction = await Database.beginTransaction()
+    
     try {
-        resource = await this.model.create(formData) 
-        resource = await this.model.find(resource.id) 
-
+        resource = await this.model.create(formData, transaction)
     } catch (e) {
+        await transaction.rollback()
         return response.status(400).json({
             status: {
-                message: e.sqlMessage
+                message: e
             }
         });
     }
 
+    await transaction.commit()
+
     if (this.modelName) {
       Event.fire(`new::${this.modelName}`, resource)
     }
+
+
     return response.json(resource);
   }
 

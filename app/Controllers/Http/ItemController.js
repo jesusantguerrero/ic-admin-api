@@ -1,6 +1,6 @@
 'use strict'
 // const User = use('User');
-const BaseController = use('Freesgen/BaseController');
+const BaseController = require('./BaseController');;
 const Database = use('Database')
 
 class ItemController extends BaseController{

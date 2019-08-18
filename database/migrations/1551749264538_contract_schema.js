@@ -6,25 +6,26 @@ const Schema = use('Schema')
 class ContractSchema extends Schema {
   up () {
     this.create('contracts', (table) => {
-      table.increments()
-      table.integer('id_company').unsigned().references('id').inTable('companies');
-      table.integer('id_usuario').unsigned().references('id').inTable('users');
-      table.integer('id_cliente').unsigned().references('id').inTable('clients');
-      table.integer('id_servicio').unsigned().references('id').inTable('services');
-      table.integer('id_precio').unsigned().references('id').inTable('prices');
-      table.integer('id_ip').unsigned().references('id').inTable('ips');
-      table.string('codigo', 6);
-      table.date('fecha');
-      table.integer('duracion');
-      table.integer('estado').comment('activo, saldado, cancelado, mora, suspendido').default(1);
-      table.string('nombre_equipo', 50);
-      table.string('mac_equipo', 50);
-      table.string('modelo', 50);
+      table.uuid('id').primary()
+      table.uuid('company_id', 36).references('id').inTable('companies');
+      table.uuid('user_id', 36).references('id').inTable('users');
+      table.uuid('client_id', 36).references('id').inTable('clients');
+      table.uuid('service_id', 36).references('id').inTable('services');
+      table.uuid('precio_id', 36).references('id').inTable('prices');
+      table.uuid('ip_id', 36).references('id').inTable('ips');
+      table.string('code', 6);
+      table.date('date');
+      table.integer('duration');
+      table.enu('period', ['monthly', 'product'] );
+      table.enu('estado', ['active', 'paid', 'canceled', 'late', 'suspended']).default('active');
+      table.string('equipment', 50);
+      table.string('equipment_mac', 50);
+      table.string('model', 50);
       table.string('router', 50);
       table.string('mac_router', 50);
-      table.boolean('instalado');
-      table.text('observaciones');
-      table.date('fecha_suspencion');
+      table.boolean('installed');
+      table.text('observations');
+      table.date('suspension_date');
       table.timestamps()
     })
   }

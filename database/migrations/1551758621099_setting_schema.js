@@ -6,8 +6,8 @@ const Schema = use('Schema')
 class SettingSchema extends Schema {
   up () {
     this.create('settings', (table) => {
-      table.increments()
-      table.integer('id_company').unsigned().references('id').inTable('companies')
+      table.uuid('id').primary()
+      table.uuid('company_id', 36).references('id').inTable('companies')
       table.string('name', 100)
       table.string('datatype', 50)
       table.text('value')

@@ -1,5 +1,5 @@
 'use strict'
-const BaseController = use('Freesgen/BaseController');
+const BaseController = require('./BaseController');;
 const IpAddress = use('App/Models/Ip')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */

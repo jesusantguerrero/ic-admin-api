@@ -6,12 +6,12 @@ const Schema = use('Schema')
 class TicketSchema extends Schema {
   up () {
     this.create('tickets', (table) => {
-      table.increments()
-      table.integer('id_company').unsigned().references('id').inTable('companies');
-      table.integer("assigned_id").unsigned().references('id').inTable('users')
-      table.integer("reporter_id").unsigned().references('id').inTable('users')
-      table.integer("milestone_id").unsigned()
-      table.integer("label_id").unsigned()
+      table.uuid('id').primary()
+      table.uuid('company_id', 36).references('id').inTable('companies');
+      table.uuid("assigned_id", 36).references('id').inTable('users')
+      table.uuid("reporter_id", 36).references('id').inTable('users')
+      table.uuid("milestone_id", 36).references('id').inTable('milestones')
+      table.uuid("label_id", 36).references('id').inTable('labels')
       table.string('title', 100)
       table.text('description')
       table.date('due_date')

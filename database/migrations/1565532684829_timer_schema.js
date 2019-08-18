@@ -6,7 +6,7 @@ const Schema = use('Schema')
 class TimerSchema extends Schema {
   up () {
     this.create('timers', (table) => {
-      table.increments()
+      table.uuid('id').primary()
       table.text("milestone_id")
       table.json("label_ids")
       table.text("description")

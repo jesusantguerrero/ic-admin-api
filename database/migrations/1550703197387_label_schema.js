@@ -6,8 +6,8 @@ const Schema = use('Schema')
 class LabelSchema extends Schema {
   up () {
     this.create('labels', (table) => {
-      table.increments()
-      table.integer('id_company').unsigned().references('id').inTable('companies');
+      table.uuid('id').primary()
+      table.uuid('company_id', 36).references('id').inTable('companies');
       table.string('title', 100)
       table.text('description')
       table.string("color", 50)

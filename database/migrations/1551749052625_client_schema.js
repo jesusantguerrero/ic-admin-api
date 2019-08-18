@@ -6,25 +6,22 @@ const Schema = use('Schema')
 class ClientSchema extends Schema {
   up () {
     this.create('clients', (table) => {
-      table.increments()
-      table.integer('id_company').unsigned().references('id').inTable('companies');
-      table.string('nombres', 60);
-      table.string('apellidos', 60);
-      table.string('cedula', 20);
-      table.string('provincia', 50);
-      table.string('ciudad', 50);
+      table.uuid('id').primary()
+      table.uuid('company_id', 36).references('id').inTable('companies');
+      table.string('names', 60);
+      table.string('surename', 60);
+      table.string('dni', 20);
+      table.string('province', 50);
+      table.string('city', 50);
       table.string('sector', 50);
-      table.string('calle', 50);
-      table.string('casa', 30);
-      table.string('telefono', 15);
-      table.string('celular', 15);
-      table.string('lugar_trabajo', 150);
-      table.string('telefono_trabajo', 15);
-      table.decimal('ingresos', 11, 2);
-      table.integer('estado').comment('inactivo, activo, mora, suspendido, en corte').default(1);
-      table.text('observaciones');
-      table.text('detalles_direccion');
-      table.date('fecha_suspencion');
+      table.string('street', 50);
+      table.string('ext_number', 30);
+      table.string('phone', 15);
+      table.string('cellphone', 15);
+      table.integer('status').comment('inactive, active, debtor, suspended, desconected, free').default(1);
+      table.text('observations');
+      table.text('direction_details');
+      // table.date('fecha_suspencion');
       table.timestamps()
     })
   }

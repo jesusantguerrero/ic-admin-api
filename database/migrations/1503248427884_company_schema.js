@@ -6,7 +6,8 @@ const Schema = use('Schema')
 class CompanySchema extends Schema {
   up () {
     this.create('companies', (table) => {
-      table.increments()
+      table.uuid('id').primary()
+      table.uuid('user_id')
       table.string('RNC', 50);
       table.string('nombre', 50);
       table.text('logo');

@@ -6,10 +6,10 @@ const Schema = use('Schema')
 class TimeEntrySchema extends Schema {
   up () {
     this.create('time_entries', (table) => {
-      table.increments()
-      table.integer('id_company').unsigned().references('id').inTable('companies');
-      table.integer("user_id").unsigned().references('id').inTable('users')
-      table.integer("milestone_id").unsigned()
+      table.uuid('id').primary()
+      table.uuid('company_id', 36).references('id').inTable('companies');
+      table.uuid("user_id", 36).references('id').inTable('users')
+      table.uuid("milestone_id", 36)
       table.json("label_ids")
       table.text("description")
       table.boolean("billable").default(false)

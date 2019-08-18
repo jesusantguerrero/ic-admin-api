@@ -1,3 +1,12 @@
+
+
+
+
+
+
+
+
+
 'use strict'
 
 /** @type {import('@adonisjs/lucid/src/Schema')} */
@@ -6,8 +15,8 @@ const Schema = use('Schema')
 class MilestoneSchema extends Schema {
   up () {
     this.create('milestones', (table) => {
-      table.increments()
-      table.integer('id_company').unsigned().references('id').inTable('companies');
+      table.uuid('id').primary()
+      table.uuid('company_id', 36).references('id').inTable('companies');
       table.string('title', 100)
       table.text('description')
       table.date("due_date", 50)

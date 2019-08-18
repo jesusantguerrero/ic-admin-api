@@ -22,6 +22,7 @@ class User extends BaseModel{
     })
   }
 
+
   static get hidden () {
     return ['password']
   }

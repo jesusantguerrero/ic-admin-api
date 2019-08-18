@@ -4,6 +4,9 @@
 const Model = require('./BaseModel')
 
 class Client extends Model {
+    static customCreationHook(formData, auth) {
+        formData.company_id = auth.user.company_id;
+    }
 }
 
 module.exports = Client

@@ -6,11 +6,11 @@ const Schema = use('Schema')
 class TimeEntryLabelSchema extends Schema {
   up () {
     this.create('time_entry_labels', (table) => {
-      table.increments()
-      table.integer('id_company').unsigned().references('id').inTable('companies');
-      table.integer("user_id").unsigned().references('id').inTable('users')
-      table.integer("time_entry_id").unsigned().references('id').inTable('time_entries')
-      table.integer("label_id").unsigned().references('id').inTable('labels')
+      table.uuid('id').primary()
+      table.uuid('company_id', 36).references('id').inTable('companies');
+      table.uuid("user_id", 36).references('id').inTable('users')
+      table.uuid("time_entry_id", 36).references('id').inTable('time_entries')
+      table.uuid("label_id", 36).references('id').inTable('labels')
       table.timestamps()
     })
   }

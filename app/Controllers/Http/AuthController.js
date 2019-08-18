@@ -8,13 +8,11 @@ class AuthController {
         return response.json(token);
     }
 
-    async registration ({request, response }) {
+    async registration ({auth, request, response }) {
         const credentials = request.all();
         try {
-            const user = await User.create(credentials) 
-
+            await User.create(credentials) 
         } catch (e) {
-            console.log(e);
             return response.status(400).json({
                 status: {
                     message: e.sqlMessage
@@ -22,7 +20,8 @@ class AuthController {
             });
         }
 
-        return "saved";
+        const token = await auth.attempt(credentials.email, credentials.password);
+        return response.json(token);
     }
 
     async currentUser ({auth}) {

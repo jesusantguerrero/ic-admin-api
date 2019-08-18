@@ -41,6 +41,12 @@ Route.group(() => {
     Route.resource('prices', 'PriceController').apiOnly()
     Route.resource('contracts', 'ContractController').apiOnly()
     Route.resource('payments', 'PaymentController').apiOnly()
+    // Route.resource('payment_docs', 'PaymentDocsController').apiOnly()
+
+    // Accounting
+    // Route.resource('accounts', 'ContractServiceController').apiOnly()
+    // Route.resource('accounts-tag', 'ContractServiceController').apiOnly()
+    // Route.resource('transactions', 'ContractServiceController').apiOnly()
     
     // issues section
     Route.resource('tickets', 'TicketController').apiOnly()
