@@ -21,7 +21,6 @@ class ClientSchema extends Schema {
       table.integer('status').comment('inactive, active, debtor, suspended, desconected, free').default(1);
       table.text('observations');
       table.text('direction_details');
-      // table.date('fecha_suspencion');
       table.timestamps()
     })
   }
