@@ -1,6 +1,6 @@
 'use strict'
 
-const BaseController = require('./BaseController');
+const BaseController = use('Freesgen/BaseController');
 const Timer = use('App/Models/Timer')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */

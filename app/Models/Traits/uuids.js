@@ -1,7 +1,7 @@
 'use strict'
 const uuid = require('uuid/v4');
 
-class NoTimestamp {
+class Uuids {
   register (Model) {
     Model.addHook('beforeCreate', function (modelInstance) {
         modelInstance.id = uuid()
@@ -9,4 +9,4 @@ class NoTimestamp {
   }
 }
 
-module.exports = NoTimestamp
+module.exports = Uuids

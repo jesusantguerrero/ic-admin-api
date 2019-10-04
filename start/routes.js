@@ -44,6 +44,7 @@ Route.group(() => {
     // Route.resource('payment_docs', 'PaymentDocsController').apiOnly()
 
     // Accounting
+    Route.resource('invoices', 'InvoiceController').apiOnly()
     // Route.resource('accounts', 'ContractServiceController').apiOnly()
     // Route.resource('accounts-tag', 'ContractServiceController').apiOnly()
     // Route.resource('transactions', 'ContractServiceController').apiOnly()

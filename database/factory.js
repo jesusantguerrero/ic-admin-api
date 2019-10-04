@@ -55,3 +55,35 @@ Factory.blueprint('App/Models/Service', async (faker) => {
        type: 0
     }
 })
+
+Factory.blueprint('App/Models/Invoice', async (faker) => {
+    const user = await User.findBy("email", "jesusant.guerrero@gmail.com")
+    
+    return {
+       company_id:  user.company_id,
+       id_resource_id: "",
+       resource_type_id: "INVOICE",
+       client_id: "508fae1f-aedb-46bf-b8ec-9c6c0bbd4db6",
+       user_id: user.id,
+       number: 1,
+       date: '2018-10-03',
+       due_date: '2018-10-03',
+ 
+       // header
+       concept: "Invoice",
+       description: "primer invoice",
+       logo: "",
+ 
+       // footer
+       notes: "",
+       footer: "",
+ 
+       // totals
+       subtotal: 10.00,
+       penalty: 0.00,
+       extra_amount: 0.00,
+       discount: 0.00,
+       total: 10.00,
+       debt: 0
+    }
+})
