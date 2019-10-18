@@ -15,6 +15,10 @@ class Invoice extends Model {
         return this.hasMany('App/Models/LineItem', 'id', 'invoice_id' )
     }
 
+    client() {
+        return this.belongsTo('App/Models/Client')
+    }
+
     static async createLines(invoice, items) {
         return new Promise(async (resolve) => {
             try {
