@@ -5,10 +5,19 @@ const Model = require('./BaseModel')
 const Service = use('App/Models/Service')
 const LineItem = use('App/Models/LineItem')
 const uuid = require('uuid/v4')
+const Database = use('Database')
 
 class Invoice extends Model {
     static boot () {
         super.boot()
+        
+        this.addHook('beforeCreate', async (InvoiceInstance) => {
+            await Invoice.setNumber(InvoiceInstance)
+        })
+        
+        this.addHook('beforeSave', async (InvoiceInstance) => {
+            await Invoice.setNumber(InvoiceInstance)
+        })
       }
 
     lineItems() {
@@ -19,6 +28,25 @@ class Invoice extends Model {
         return this.belongsTo('App/Models/Client')
     }
 
+    static async setNumber(InvoiceInstance) {
+        let isInvalidNumber = true;
+
+        if (InvoiceInstance.number) {
+            isInvalidNumber = await Database.table('invoices').where({company_id: InvoiceInstance.company_id, number: InvoiceInstance.number}).whereNot({
+                id: InvoiceInstance.id
+            });
+
+            isInvalidNumber = isInvalidNumber.length
+        }
+
+        if (isInvalidNumber) {
+            const result = await Database.table('invoices').where({company_id: InvoiceInstance.company_id}).max('number as number');
+            InvoiceInstance.number = Number(result[0].number) + 1;
+        }
+
+        return InvoiceInstance.number;
+    }
+
     static async createLines(invoice, items) {
         return new Promise(async (resolve) => {
             try {
@@ -27,7 +55,7 @@ class Invoice extends Model {
                     return
                 }
 
-                items.forEach(async item => {
+                items.forEach(async (item) => {
                     if (!item.service_name) {
                         item.service_name = await Service.find(item.service_id)
                         item.service_name = item.service_name.name
@@ -54,6 +82,7 @@ class Invoice extends Model {
 
     static customCreationHook(formData, auth) {
         formData.company_id = auth.user.company_id;
+        formData.user_id = auth.user.id;
     }
 }
 
