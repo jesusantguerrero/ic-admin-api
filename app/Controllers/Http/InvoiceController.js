@@ -35,7 +35,7 @@ class InvoiceController extends BaseController{
     return response.json(resource);
   }
 
-    /**
+  /**
    * Update ticket details.
    * PUT or PATCH tickets/:id
    *
@@ -76,7 +76,8 @@ class InvoiceController extends BaseController{
 
     return response.json(resource)
   }
-    /**
+
+  /**
    * Update ticket details.
    * PUT or PATCH tickets/:id
    *
@@ -122,7 +123,49 @@ class InvoiceController extends BaseController{
     return response.json(resource)
   }
 
+  /**
+   * add payment to invoice.
+   * POST invoices/:id/add-payment
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   */
+  async addPayment ({ params, request, response }) {
+    const resource = await this.model.find(params.id)
+    const data = request.all();
+    let paymentDoc, error;
 
+    if (!resource) {
+      error ="resource not found"
+    }
+
+    if (resource && !resource.debt) {
+      error = "This invoice is already paid";
+    }
+
+    if (error) {
+      return response.status(400).json({
+        status: {
+          message: error
+        }
+      });
+    }
+
+    try{
+      paymentDoc = await resource.createPaymentDoc(data).catch(e => console.log(e))
+
+    } catch(e) {
+        return response.status(400).json({
+          status: {
+            message: e.toString()
+          }
+        });
+    }
+
+    return response.json(paymentDoc)
+  }
+  
   async createInvoice(formData) {
     const transaction = await Database.beginTransaction()
     let resource;

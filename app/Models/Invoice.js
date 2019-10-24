@@ -13,15 +13,21 @@ class Invoice extends Model {
         
         this.addHook('beforeCreate', async (InvoiceInstance) => {
             await Invoice.setNumber(InvoiceInstance)
+            await Invoice.checkPayments(InvoiceInstance);
         })
         
         this.addHook('beforeSave', async (InvoiceInstance) => {
-            await Invoice.setNumber(InvoiceInstance)
+            await Invoice.setNumber(InvoiceInstance);
+            await Invoice.checkPayments(InvoiceInstance);
         })
       }
 
     lineItems() {
         return this.hasMany('App/Models/LineItem', 'id', 'invoice_id' )
+    }
+
+    paymentDocs() {
+        return this.hasMany('App/Models/PaymentDoc', 'id', 'resource_id' )
     }
 
     client() {
@@ -78,6 +84,21 @@ class Invoice extends Model {
             }    
             resolve()
         })
+    }
+
+   createPaymentDoc(formData) {
+       formData.amount = formData.amount > this.debt ? this.debt : formData.amount;
+
+        return this.paymentDocs().create({
+            ...formData,
+            user_id: this.user_id,
+            company_id: this.company_id
+        })
+    }
+
+   static async checkPayments(invoice) {
+        const totalPaid = await invoice.paymentDocs().sum('amount as amount')
+        invoice.debt = parseFloat(invoice.total || 0) - parseFloat(totalPaid[0]['amount'] || 0);
     }
 
     static customCreationHook(formData, auth) {

@@ -3,10 +3,7 @@
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = require('./BaseModel')
 
-class Ip extends Model {
-    user () {
-        return this.belongsTo('App/Models/User')
-    }
+class PaymentDoc extends Model {
 }
 
-module.exports = Ip
+module.exports = PaymentDoc
