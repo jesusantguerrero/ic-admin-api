@@ -106,7 +106,7 @@ class InvoiceController extends BaseController{
       return {...item}
     });
 
-    formData = formData.toJSON();
+    formData = {...formData.toJSON()};
     formData.status = 1;
     formData.items = items;
 
@@ -131,6 +131,44 @@ class InvoiceController extends BaseController{
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
+  async deletePayment ({ params, request, response }) {
+    const resource = await this.model.find(params.id)
+    let error;
+
+    if (!resource) {
+      error ="resource not found"
+    }
+
+    if (error) {
+      return response.status(400).json({
+        status: {
+          message: error
+        }
+      });
+    }
+
+    try{
+      await resource.deletePaymentDoc(params.paymentId).catch(e => console.log(e))
+      await resource.save();
+
+    } catch(e) {
+        return response.status(400).json({
+          status: {
+            message: e.toString()
+          }
+        });
+    }
+
+    return response.json(resource)
+  }
+  /**
+   * add payment to invoice.
+   * POST invoices/:id/add-payment
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   */
   async addPayment ({ params, request, response }) {
     const resource = await this.model.find(params.id)
     const data = request.all();
@@ -140,7 +178,7 @@ class InvoiceController extends BaseController{
       error ="resource not found"
     }
 
-    if (resource && !resource.debt) {
+    if (resource && Number(resource.debt) <= 0) {
       error = "This invoice is already paid";
     }
 
@@ -154,6 +192,7 @@ class InvoiceController extends BaseController{
 
     try{
       paymentDoc = await resource.createPaymentDoc(data).catch(e => console.log(e))
+      await resource.save();
 
     } catch(e) {
         return response.status(400).json({
@@ -173,12 +212,12 @@ class InvoiceController extends BaseController{
     try {
         let items = formData.items.map(items => {return {...items}});
         delete formData.items;
-        
-        console.log(formData);
+
         resource = await this.model.create(formData, transaction)
         await this.model.createLines(resource, items)
     } catch (e) {
         await transaction.rollback()
+        console.log("here is the error", e)
         return {resource: null, err: e};
     }
 

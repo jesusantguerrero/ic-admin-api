@@ -8,7 +8,7 @@ class InvoiceSchema extends Schema {
     this.create('invoices', (table) => {
       table.uuid('id').primary();
       table.uuid('company_id', 36).references('id').inTable('companies');
-      table.uuid('id_resource_id', 36).nullable();
+      table.uuid('resource_id', 36).nullable();
       table.uuid('resource_type_id', 36).nullable();
       table.uuid('client_id', 36);
       table.uuid('user_id', 36);

@@ -46,7 +46,8 @@ Route.group(() => {
     // Accounting
     Route.resource('invoices', 'InvoiceController').apiOnly()
     Route.post('invoices/:id/clone', 'InvoiceController.clone')
-    Route.post('invoices/:id/add-payment', 'InvoiceController.addPayment')
+    Route.post('invoices/:id/payment', 'InvoiceController.addPayment')
+    Route.delete('invoices/:id/payment/:paymentId', 'InvoiceController.deletePayment')
     // Route.resource('accounts', 'ContractServiceController').apiOnly()
     // Route.resource('accounts-tag', 'ContractServiceController').apiOnly()
     // Route.resource('transactions', 'ContractServiceController').apiOnly()
