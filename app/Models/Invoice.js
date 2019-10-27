@@ -82,8 +82,9 @@ class Invoice extends Model {
                         service_id: item.service_id,
                         service_name: item.service_name,
                         company_id: invoice.company_id,
+                        resource_parent_type: invoice.resource_type_id,
                         id: uuid()
-                    }).catch(err => console.log(err))
+                    })
                 })
             } catch(e) {
                 console.log(e)
@@ -112,7 +113,6 @@ class Invoice extends Model {
            const totalPaid = await PaymentDoc.query().where({resource_id: invoice.id}).sum('amount as amount')
            invoice.debt = parseFloat(invoice.total || 0) - parseFloat(totalPaid[0]['amount'] || 0);
            invoice.status = Invoice.checkStatus(invoice);
-        //    await Invoice.query().where({id: invoice.id }).update(invoice);
         }
     }
 

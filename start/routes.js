@@ -44,6 +44,7 @@ Route.group(() => {
     // Route.resource('payment_docs', 'PaymentDocsController').apiOnly()
 
     // Accounting
+    Route.resource('line-items', 'LineItemController').apiOnly()
     Route.resource('invoices', 'InvoiceController').apiOnly()
     Route.post('invoices/:id/clone', 'InvoiceController.clone')
     Route.post('invoices/:id/payment', 'InvoiceController.addPayment')
