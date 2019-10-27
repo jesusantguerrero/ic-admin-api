@@ -15,7 +15,7 @@ const Factory = use('Factory')
 
 class ClientSeeder {
   async run () {
-    // const clients = await Factory.model('App/Models/Client').create()
+    await Factory.model('App/Models/Client').create()
   }
 }
 

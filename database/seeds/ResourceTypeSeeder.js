@@ -2,7 +2,7 @@
 
 /*
 |--------------------------------------------------------------------------
-| RouterSeeder
+| ResourceTypeSeeder
 |--------------------------------------------------------------------------
 |
 | Make use of the Factory instance to seed database with dummy data or
@@ -13,10 +13,10 @@
 /** @type {import('@adonisjs/lucid/src/Factory')} */
 const Factory = use('Factory')
 
-class RouterSeeder {
+class ResourceTypeSeeder {
   async run () {
-    await Factory.model('App/Models/Router').create()
+    await Factory.model('App/Models/ResourceType').createMany(4, ['INVOICE', 'EXPENSE', 'PRODUCT', 'ACCOUNT'])
   }
 }
 
-module.exports = RouterSeeder
+module.exports = ResourceTypeSeeder
