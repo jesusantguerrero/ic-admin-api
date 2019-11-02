@@ -25,6 +25,10 @@ class Service extends Model {
         stock.stock = expenses[0].qty - invoices[0].qty
         await stock.save()
     }
+
+    static customCreationHook(formData, auth) {
+        formData.company_id = auth.user.company_id;
+    }
 }
 
 module.exports = Service
