@@ -11,10 +11,6 @@ class LineItem extends Model {
         this.addHook('afterCreate', async (lineItem) => {
             await LineItem.updateStock(lineItem);
         })
-        
-        this.addHook('afterSave', async (lineItem) => {
-            await LineItem.updateStock(lineItem);
-        })
     }
 
     service() {
@@ -23,10 +19,20 @@ class LineItem extends Model {
     
     static async updateStock(lineItem) {
         try {
-            const service = await lineItem.service().fetch();
-            await service.updateStock();
+           const service = await lineItem.service().fetch();
+           service = await service.updateStock();
+           return service;
         } catch (e) {
-            console.log("nada que ver", e)
+        }
+    }
+    
+    static async updateStockFromService(serviceId) {
+        try {
+            const service = await Service.find(serviceId);
+            service = await service.updateStock();
+            return service;
+        } catch (e) {
+            console.log(e)
         }
     }
 }

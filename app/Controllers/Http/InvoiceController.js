@@ -77,6 +77,8 @@ class InvoiceController extends BaseController{
     return response.json(resource)
   }
 
+  
+  //  custom calls
   /**
    * Update ticket details.
    * PUT or PATCH tickets/:id
@@ -107,7 +109,7 @@ class InvoiceController extends BaseController{
     });
 
     formData = {...formData.toJSON()};
-    formData.status = 1;
+    formData.status = 0;
     formData.items = items;
 
     const {resource, err} = await this.createInvoice(formData)
@@ -122,6 +124,28 @@ class InvoiceController extends BaseController{
 
     return response.json(resource)
   }
+
+  //  utils
+  async createInvoice(formData) {
+    const transaction = await Database.beginTransaction()
+    let resource;
+    
+    try {
+        let items = formData.items.map(items => {return {...items}});
+        delete formData.items;
+
+        resource = await this.model.create(formData, transaction)
+        await this.model.createLines(resource, items)
+    } catch (e) {
+        await transaction.rollback()
+        return {resource: null, err: e};
+    }
+
+    await transaction.commit()
+    return {resource, err: null}
+  }
+  
+  // invoice-payments 
 
   /**
    * add payment to invoice.
@@ -205,25 +229,7 @@ class InvoiceController extends BaseController{
     return response.json(paymentDoc)
   }
   
-  async createInvoice(formData) {
-    const transaction = await Database.beginTransaction()
-    let resource;
-    
-    try {
-        let items = formData.items.map(items => {return {...items}});
-        delete formData.items;
 
-        resource = await this.model.create(formData, transaction)
-        await this.model.createLines(resource, items)
-    } catch (e) {
-        await transaction.rollback()
-        console.log("here is the error", e)
-        return {resource: null, err: e};
-    }
-
-    await transaction.commit()
-    return {resource, err: null}
-  }
 }
 
 module.exports = InvoiceController

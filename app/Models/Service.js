@@ -11,8 +11,16 @@ class Service extends Model {
     }
 
     async updateStock() {
-        const invoices = await LineItem.query().where({service_id: this.id, resource_parent_type: 'INVOICE'}).sum('quantity as qty')
-        const expenses = await LineItem.query().where({service_id: this.id, resource_parent_type: 'EXPENSE'}).sum('quantity as qty')
+        const invoices = await LineItem.query()
+        .where({service_id: this.id, resource_parent_type: 'INVOICE'})
+        .joinRaw("INNER JOIN invoices inv on inv.id = invoice_id and inv.status  IN('partial','unpaid','paid')")
+        .sum('quantity as qty')
+        
+        const expenses = await LineItem.query()
+        .where({service_id: this.id, resource_parent_type: 'EXPENSE'})
+        .joinRaw("INNER JOIN invoices inv on inv.id = invoice_id and inv.status IN('partial','unpaid','paid')")
+        .sum('quantity as qty')
+        
         const stock = await Stock.findBy({ service_id: this.id})
         stock.stock = expenses[0].qty - invoices[0].qty
         await stock.save()

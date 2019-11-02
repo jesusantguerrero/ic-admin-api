@@ -20,6 +20,24 @@ class Invoice extends Model {
             await Invoice.setNumber(InvoiceInstance);
             await Invoice.checkPayments(InvoiceInstance);
         })
+
+        this.addHook('beforeDelete', async (InvoiceInstance) => {
+            InvoiceInstance.status = 'draft';
+            await InvoiceInstance.save();
+            const lineItems = await InvoiceInstance.lineItems().fetch();
+
+            lineItems.toJSON().forEach(async line => {
+                const service = await Service.find(line.service_id)
+                await service.updateStock();
+            })
+            await PaymentDoc
+                    .query()
+                    .where('resource_id', InvoiceInstance.id)
+                    .delete()
+            await LineItem.query()
+                  .where('invoice_id', InvoiceInstance.id)
+                  .delete()
+        })
       }
 
     lineItems() {
@@ -50,7 +68,6 @@ class Invoice extends Model {
         }
 
         if (isInvalidNumber) {
-            console.log(InvoiceInstance.resource_type_id);
             const result = await Database.table('invoices').where({
                 company_id: InvoiceInstance.company_id, 
                 resource_type_id: InvoiceInstance.resource_type_id
@@ -122,8 +139,10 @@ class Invoice extends Model {
             status = 'partial';
         } else if (invoice.debt == 0) {
             status = 'paid';
-        } else if (invoice.debt == invoice.total) {
+        } else if (invoice.debt == invoice.total && invoice.status != 0) {
             status = 'unpaid';
+        } else {
+            status = 'draft';
         }
 
         return status;

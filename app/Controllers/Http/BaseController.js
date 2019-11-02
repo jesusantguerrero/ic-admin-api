@@ -151,7 +151,7 @@ class BaseController  {
     } catch(e) {
       return response.status(400).json({
         status: {
-          message: e.sqlMessage
+          message: e.toString()
         }
       });
     }
