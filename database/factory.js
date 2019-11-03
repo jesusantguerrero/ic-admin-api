@@ -90,19 +90,6 @@ Factory.blueprint('App/Models/Invoice', async (faker) => {
 
 // 
 
-Factory.blueprint('App/Models/Category', async (faker) => {
-  const user = await User.findBy("email", "jesusant.guerrero@gmail.com")
-  
-  return {
-     company_id:  user.company_id,
-     name: "Oro",
-     description: "Oro",
-     price: 800,
-     frequence: 0,
-     type: 0
-  }
-})
-
 Factory.blueprint('App/Models/ResourceType', async (faker, i, data) => {
   const user = await User.findBy("email", "jesusant.guerrero@gmail.com")
   
@@ -111,6 +98,20 @@ Factory.blueprint('App/Models/ResourceType', async (faker, i, data) => {
      name: data[i],
      description: `${data[i]} of the system`,
      allow_categories: false,
+     status: 1,
+  }
+})
+
+Factory.blueprint('App/Models/Category', async (faker, i, data) => {
+  const user = await User.findBy("email", "jesusant.guerrero@gmail.com")
+  
+  return {
+     company_id: user.company_id,
+     parent_id: '',
+     resource_type_id: '',
+     resource_type: data[i].resourceType,
+     name: data[i].name,
+     description: `${data[i].name} of the system`,
      status: 1,
   }
 })

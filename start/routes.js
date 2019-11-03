@@ -41,7 +41,7 @@ Route.group(() => {
     Route.resource('prices', 'PriceController').apiOnly()
     Route.resource('contracts', 'ContractController').apiOnly()
     Route.resource('payments', 'PaymentController').apiOnly()
-    // Route.resource('payment_docs', 'PaymentDocsController').apiOnly()
+    Route.resource('payment_docs', 'PaymentDocsController').apiOnly()
 
     // Accounting
     Route.resource('line-items', 'LineItemController').apiOnly()
@@ -49,8 +49,9 @@ Route.group(() => {
     Route.post('invoices/:id/clone', 'InvoiceController.clone')
     Route.post('invoices/:id/payment', 'InvoiceController.addPayment')
     Route.delete('invoices/:id/payment/:paymentId', 'InvoiceController.deletePayment')
-    // Route.resource('accounts', 'ContractServiceController').apiOnly()
-    // Route.resource('accounts-tag', 'ContractServiceController').apiOnly()
+
+    Route.resource('accounts', 'AccountController').apiOnly()
+    Route.resource('categories', 'CategoryController').apiOnly()
     // Route.resource('transactions', 'ContractServiceController').apiOnly()
     
     // issues section
