@@ -13,6 +13,7 @@ class ClientSchema extends Schema {
       table.string('surename', 60);
       table.string('dni', 20);
       table.string('email', 60);
+      
       // direction
       table.string('province', 50);
       table.string('city', 50);

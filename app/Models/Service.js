@@ -10,6 +10,18 @@ class Service extends Model {
         return this.belongsTo('App/Models/Stock')
     }
 
+    category() {
+        return this.belongsTo('App/Models/Category')
+    }
+
+    incommingAccount() {
+        return this.belongsTo('App/Models/Account', 'incomming_account', 'id')
+    }
+
+    expenseAccount() {
+        return this.belongsTo('App/Models/Account', 'expense_account', 'id')
+    }
+
     async updateStock() {
         const invoices = await LineItem.query()
         .where({service_id: this.id, resource_parent_type: 'INVOICE'})

@@ -11,12 +11,6 @@ class ServiceSchema extends Schema {
       table.string('name', 30)
 			table.text('description')
 			table.decimal('price', 11, 2)
-			table.integer('frequence').comment('monthly, unit, bisemanal')
-      table.integer('type').comment('servicios, reparacion, producto')
-      table.boolean('sellable').default(false)
-      table.uuid('incomming_account')
-      table.boolean('billable').default(false)
-      table.uuid('expense_account')
       table.timestamps()
     })
   }
