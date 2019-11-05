@@ -1,17 +1,15 @@
 'use strict'
 
 const { test, trait } = use('Test/Suite')('Ticket')
-const Ticket = use('App/Models/Ticket')
-const User = use('App/Models/User')
+const { getUser} = require('./auth')
 
 trait('Test/ApiClient')
 trait('Auth/Client')
 
 test('get list of tickets', async ({ client }) => {
-  const user = await User.find(3)
   const response = await client
   .get('/api/v1/tickets')
-  .loginVia(user, 'jwt')
+  .loginVia(await getUser(), 'jwt')
   .end()
 
   response.assertStatus(200)

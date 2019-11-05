@@ -18,7 +18,7 @@ const Route = use('Route')
 
 Route.on('/').render('welcome')
 
-Route.on('api/v1/status', ({
+Route.get('/api/v1/status', ({
   response
 }) => {
   response.json({
@@ -49,6 +49,10 @@ Route.group(() => {
     Route.post('invoices/:id/clone', 'InvoiceController.clone')
     Route.post('invoices/:id/payment', 'InvoiceController.addPayment')
     Route.delete('invoices/:id/payment/:paymentId', 'InvoiceController.deletePayment')
+    
+    Route.resource('transaction-lines', 'TransactionLineController').apiOnly()
+    Route.resource('transactions', 'TransactionController').apiOnly()
+    Route.post('transaction/:id/clone', 'TransactionController.clone')
 
     Route.resource('accounts', 'AccountController').apiOnly()
     Route.resource('categories', 'CategoryController').apiOnly()

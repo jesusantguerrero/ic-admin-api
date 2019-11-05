@@ -6,6 +6,7 @@ const LineItem = use('App/Models/LineItem')
 const Stock = use('App/Models/Stock')
 
 class Service extends Model {
+    fill
     stock() {
         return this.belongsTo('App/Models/Stock')
     }

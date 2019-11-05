@@ -1,14 +1,21 @@
 'use strict'
-const BaseController = require('./BaseController');
-const Invoice = use('App/Models/Invoice')
-const Database = use('Database')
-/**
- * Resourceful controller for interacting with labels
- */
-class InvoiceController extends BaseController{
 
+/** @typedef {import('@adonisjs/framework/src/Request')} Request */
+/** @typedef {import('@adonisjs/framework/src/Response')} Response */
+/** @typedef {import('@adonisjs/framework/src/View')} View */
+
+/**
+ * Resourceful controller for interacting with transactions
+ * 
+ */
+
+const BaseController = require('./BaseController');
+const Transaction = use('App/Models/Transaction')
+const Database = use('Database')
+
+class TransactionController extends BaseController {
   constructor() {
-    super(Invoice)
+    super(Transaction)
   }
 
   async store ({ auth, request, response }) {
@@ -18,12 +25,12 @@ class InvoiceController extends BaseController{
       this.model.customCreationHook(formData, auth)
     }
         
-    const {resource, err} = await this.createInvoice(formData)
+    const {resource, err} = await this.createTransaction(formData)
 
     if (err) {
         return response.status(400).json({
             status: {
-                message: err
+                message: err.toString()
             }
         });
     }
@@ -36,8 +43,8 @@ class InvoiceController extends BaseController{
   }
 
   /**
-   * Update ticket details.
-   * PUT or PATCH tickets/:id
+   * Update transaction details.
+   * PUT or PATCH transaction/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -56,6 +63,10 @@ class InvoiceController extends BaseController{
 
     try{
       const data = request.all();
+      if (this.model.customCreationHook && auth) {
+        this.model.customCreationHook(data, auth)
+      }
+      
       let items = data.items.map(items => {return {...items}});
       delete data.items;
       resource.merge(data);
@@ -76,12 +87,11 @@ class InvoiceController extends BaseController{
 
     return response.json(resource)
   }
-
   
   //  custom calls
   /**
-   * Update ticket details.
-   * PUT or PATCH tickets/:id
+   * Clone the transaction.
+   * POST tickets/:id/clone
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -96,7 +106,6 @@ class InvoiceController extends BaseController{
           message: "resource not found"
         }
       });
-
     }
 
     if (this.model.customCreationHook && auth) {
@@ -126,7 +135,7 @@ class InvoiceController extends BaseController{
   }
 
   //  utils
-  async createInvoice(formData) {
+  async createTransaction(formData) {
     const transaction = await Database.beginTransaction()
     let resource;
     
@@ -142,93 +151,8 @@ class InvoiceController extends BaseController{
     }
 
     await transaction.commit()
-    return {resource, err: null}
-  }
-  
-  // invoice-payments 
-
-  /**
-   * add payment to invoice.
-   * POST invoices/:id/add-payment
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async deletePayment ({ params, request, response }) {
-    const resource = await this.model.find(params.id)
-    let error;
-
-    if (!resource) {
-      error ="resource not found"
-    }
-
-    if (error) {
-      return response.status(400).json({
-        status: {
-          message: error
-        }
-      });
-    }
-
-    try{
-      await resource.deletePaymentDoc(params.paymentId).catch(e => console.log(e))
-      await resource.save();
-
-    } catch(e) {
-        return response.status(400).json({
-          status: {
-            message: e.toString()
-          }
-        });
-    }
-
-    return response.json(resource)
-  }
-
-  /**
-   * add payment to invoice.
-   * POST invoices/:id/add-payment
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   */
-  async addPayment ({ params, request, response }) {
-    const resource = await this.model.find(params.id)
-    const data = request.all();
-    let paymentDoc, error;
-
-    if (!resource) {
-      error ="resource not found"
-    }
-
-    if (resource && Number(resource.debt) <= 0) {
-      error = "This invoice is already paid";
-    }
-
-    if (error) {
-      return response.status(400).json({
-        status: {
-          message: error
-        }
-      });
-    }
-
-    try{
-      paymentDoc = await resource.createPaymentDoc(data).catch(e => console.log(e))
-      await resource.save();
-
-    } catch(e) {
-        return response.status(400).json({
-          status: {
-            message: e.toString()
-          }
-        });
-    }
-
-    return response.json(paymentDoc)
+    return { resource, err: null}
   }
 }
 
-module.exports = InvoiceController
+module.exports = TransactionController
