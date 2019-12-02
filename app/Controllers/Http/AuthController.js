@@ -4,7 +4,7 @@ const User = use('App/Models/User')
 class AuthController {
     async login ({ auth, request, response }) {
         const { email, password } = request.all();
-        const token = await auth.attempt(email, password);
+        const token = await auth.attempt(email, password)
         return response.json(token);
     }
 
@@ -13,9 +13,9 @@ class AuthController {
         try {
             await User.create(credentials) 
         } catch (e) {
-            return response.status(400).json({
+            return response.status(401).json({
                 status: {
-                    message: e.sqlMessage
+                    message: "Bad auth credentials"
                 }
             });
         }
