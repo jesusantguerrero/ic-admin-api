@@ -28,12 +28,12 @@ Route.get('/api/v1/status', ({
 
 Route.group(() => {
     Route.resource('items', 'ItemController').apiOnly()
-    
+
     // Company Section
     Route.resource('users', 'UserController').apiOnly()
     Route.resource('companies', 'CompanyController').apiOnly()
     Route.resource('clients', 'ClientController').apiOnly()
-    
+
     // Business
     Route.resource('routers', 'RouterController').apiOnly()
     Route.resource('ip-addresses', 'IpAdressController').apiOnly()
@@ -49,7 +49,8 @@ Route.group(() => {
     Route.post('invoices/:id/clone', 'InvoiceController.clone')
     Route.post('invoices/:id/payment', 'InvoiceController.addPayment')
     Route.delete('invoices/:id/payment/:paymentId', 'InvoiceController.deletePayment')
-    
+    Route.post('invoices/send', 'InvoiceController.sendEmail')
+
     Route.resource('transaction-lines', 'TransactionLineController').apiOnly()
     Route.resource('transactions', 'TransactionController').apiOnly()
     Route.post('transaction/:id/clone', 'TransactionController.clone')
@@ -57,12 +58,12 @@ Route.group(() => {
     Route.resource('accounts', 'AccountController').apiOnly()
     Route.resource('categories', 'CategoryController').apiOnly()
     // Route.resource('transactions', 'ContractServiceController').apiOnly()
-    
+
     // issues section
     Route.resource('tickets', 'TicketController').apiOnly()
     Route.resource('labels', 'LabelController').apiOnly()
     Route.resource('milestones', 'MilestoneController').apiOnly()
-    
+
     // toggl timing
     Route.resource('time-entries', 'TimeEntryController').apiOnly()
 

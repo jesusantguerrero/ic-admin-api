@@ -11,11 +11,11 @@ class AuthController {
     async registration ({auth, request, response }) {
         const credentials = request.all();
         try {
-            await User.create(credentials) 
+            await User.create(credentials)
         } catch (e) {
             return response.status(401).json({
                 status: {
-                    message: "Bad auth credentials"
+                    message: e.toString()
                 }
             });
         }

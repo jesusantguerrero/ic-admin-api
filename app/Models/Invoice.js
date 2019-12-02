@@ -1,6 +1,6 @@
 'use strict'
-
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
+
 const Model = require('./BaseModel')
 const Service = use('App/Models/Service')
 const LineItem = use('App/Models/LineItem')
@@ -11,11 +11,11 @@ const Database = use('Database')
 class Invoice extends Model {
     static boot () {
         super.boot()
-        
+
         this.addHook('beforeCreate', async (InvoiceInstance) => {
             await Invoice.setNumber(InvoiceInstance)
         })
-        
+
         this.addHook('beforeSave', async (InvoiceInstance) => {
             await Invoice.setNumber(InvoiceInstance);
             await Invoice.checkPayments(InvoiceInstance);
@@ -57,8 +57,8 @@ class Invoice extends Model {
 
         if (InvoiceInstance.number) {
             isInvalidNumber = await Database.table('invoices').where({
-                company_id: InvoiceInstance.company_id, 
-                number: InvoiceInstance.number, 
+                company_id: InvoiceInstance.company_id,
+                number: InvoiceInstance.number,
                 resource_type_id: InvoiceInstance.resource_type_id
             }).whereNot({
                 id: InvoiceInstance.id
@@ -69,7 +69,7 @@ class Invoice extends Model {
 
         if (isInvalidNumber) {
             const result = await Database.table('invoices').where({
-                company_id: InvoiceInstance.company_id, 
+                company_id: InvoiceInstance.company_id,
                 resource_type_id: InvoiceInstance.resource_type_id
             }).max('number as number');
             InvoiceInstance.number = Number(result[0].number) + 1;
@@ -89,7 +89,7 @@ class Invoice extends Model {
                         item.service_name = await Service.find(item.service_id)
                         item.service_name = item.service_name.name
                     }
-        
+
                     await invoice.lineItems().create({
                         amount: item.amount,
                         concept: item.concept,
@@ -105,7 +105,7 @@ class Invoice extends Model {
                 })
             } catch(e) {
                 console.log(e)
-            }    
+            }
             resolve()
         })
     }
@@ -125,7 +125,7 @@ class Invoice extends Model {
         return payment.delete();
     }
 
-   static async checkPayments(invoice) {
+    static async checkPayments(invoice) {
        if (invoice && invoice.paymentDocs) {
            const totalPaid = await PaymentDoc.query().where({resource_id: invoice.id}).sum('amount as amount')
            invoice.debt = parseFloat(invoice.total || 0) - parseFloat(totalPaid[0]['amount'] || 0);

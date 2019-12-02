@@ -10,7 +10,6 @@ class ClientSchema extends Schema {
       table.boolean('is_customer').default(true);
       table.boolean('is_vendor');
       table.boolean('is_employee');
-      table.string('email', 254).notNullable()
     })
   }
 
@@ -20,7 +19,6 @@ class ClientSchema extends Schema {
       table.dropColumn('is_customer');
       table.dropColumn('is_vendor');
       table.dropColumn('is_employee');
-      table.dropColumn('email');
     })
   }
 }
