@@ -24,6 +24,13 @@ class RouterSchema extends Schema {
       // usuario
       // contrase;a
       // log
+
+      // Router Networks (this table)
+      // name
+      // network
+      // uso ips - computed
+      //  router device id
+      // tipo
     })
   }
 
