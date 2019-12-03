@@ -13,6 +13,10 @@ class IpSchema extends Schema {
       table.integer('status').comment('0 = disponible,1 = ocupado, 2 = sectorial');
       table.timestamps()
     })
+
+    // contract_id
+    // user_id
+    // device_id
   }
 
   down () {

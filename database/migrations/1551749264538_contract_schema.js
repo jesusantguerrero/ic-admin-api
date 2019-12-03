@@ -27,6 +27,17 @@ class ContractSchema extends Schema {
       table.text('observations');
       table.date('suspension_date');
       table.timestamps()
+
+      // tipo_de_pago
+      // dia_de_pago
+      // dias_creacion_facturas[-5, -10, -15]
+      // dias_gracia
+      // meses_para_suspencion 1, 2,3,4
+      // aplica_mora
+      // aplica_reconexion
+      // router_id
+      // ip_id
+      // last_ip
     })
   }
 

@@ -1,6 +1,7 @@
 'use strict'
 const BaseController = require('./BaseController');
 const Invoice = use('App/Models/Invoice')
+const InvoiceAction = use('App/Actions/InvoiceAction')
 const Database = use('Database')
 /**
  * Resourceful controller for interacting with labels
@@ -13,11 +14,11 @@ class InvoiceController extends BaseController{
 
   async store ({ auth, request, response }) {
     const formData = request.all();
-    
+
     if (this.model.customCreationHook && auth) {
       this.model.customCreationHook(formData, auth)
     }
-        
+
     const {resource, err} = await this.createInvoice(formData)
 
     if (err) {
@@ -77,7 +78,7 @@ class InvoiceController extends BaseController{
     return response.json(resource)
   }
 
-  
+
   //  custom calls
   /**
    * Update ticket details.
@@ -89,7 +90,7 @@ class InvoiceController extends BaseController{
    */
   async clone ({ params, auth, response }) {
     let formData = await this.model.find(params.id)
-    
+
     if (!formData) {
       return response.status(400).json({
         status: {
@@ -129,7 +130,7 @@ class InvoiceController extends BaseController{
   async createInvoice(formData) {
     const transaction = await Database.beginTransaction()
     let resource;
-    
+
     try {
         let items = formData.items.map(items => {return {...items}});
         delete formData.items;
@@ -144,8 +145,8 @@ class InvoiceController extends BaseController{
     await transaction.commit()
     return {resource, err: null}
   }
-  
-  // invoice-payments 
+
+  // invoice-payments
 
   /**
    * add payment to invoice.
@@ -229,6 +230,27 @@ class InvoiceController extends BaseController{
 
     return response.json(paymentDoc)
   }
+
+  async sendEmail({response}) {
+    const invoiceAction = new InvoiceAction();
+
+    try {
+      await invoiceAction.sendEmail();
+
+      return response.status(201).json({
+        status: {
+          message: 'Message sent'
+        }
+      })
+    } catch (e) {
+        return response.status(404).json({
+          status: {
+            message: e.toString()
+          }
+        })
+    }
+  }
+
 }
 
 module.exports = InvoiceController

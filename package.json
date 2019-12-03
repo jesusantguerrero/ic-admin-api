@@ -31,6 +31,7 @@
     "@adonisjs/vow": "^1.0.17",
     "@adonisjs/websocket": "^1.0.11",
     "adonisjs-querify": "^1.2.1",
+    "got": "^10.0.1",
     "mysql": "^2.16.0",
     "uuid": "^3.3.2"
   },

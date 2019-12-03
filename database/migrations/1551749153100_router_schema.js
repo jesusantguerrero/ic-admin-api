@@ -11,8 +11,19 @@ class RouterSchema extends Schema {
       table.integer('codigo_area').unique();
       table.string('name', 100);
       table.string('base_ip', 8).default('192.168.');
-      table.integer('posible_ips').default(250); 
+      table.integer('posible_ips').default(250);
       table.timestamps()
+      //  Routers Device
+      // ___________
+      // nombre
+      // ip mikrotik
+      //  modelo
+      // version
+      //  cliente - computed
+      //  estado
+      // usuario
+      // contrase;a
+      // log
     })
   }
 
