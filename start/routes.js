@@ -36,7 +36,7 @@ Route.group(() => {
 
     // Business
     Route.resource('routers', 'RouterController').apiOnly()
-    Route.resource('ip-addresses', 'IpAdressController').apiOnly()
+    Route.resource('ip-addresses', 'IpAddressController').apiOnly()
     Route.resource('services', 'ServiceController').apiOnly()
     Route.resource('prices', 'PriceController').apiOnly()
     Route.resource('contracts', 'ContractController').apiOnly()
