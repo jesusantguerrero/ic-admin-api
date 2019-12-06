@@ -2,14 +2,19 @@
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = require('./BaseModel')
-const Ip = use('App/Models/Ip')
+const RouterJobs = use('App/Domain/Network/Jobs/Index');
 
 class Router extends Model {
     static boot () {
         super.boot()
     
         this.addHook('afterCreate', async (RouterInstance) => {
+            RouterInstance.base_ip = "192.168.";
             await Router.createIps(RouterInstance)
+        })
+
+        this.addHook('beforeSave', async (RouterInstance) => {
+            RouterInstance.base_ip = "192.168.";
         })
       }
 
@@ -18,14 +23,8 @@ class Router extends Model {
     }
 
     static async createIps(RouterInstance) {
-        for (let i=2; i <= 250; i++) {
-           await  RouterInstance.ips().create({
-                company_id: RouterInstance.company_id,
-                final_code: i,
-                status: 0
-            })
-        }
-
+        RouterJobs.add({router: RouterInstance})
+        return;
     }
 
     static customCreationHook(formData, auth) {

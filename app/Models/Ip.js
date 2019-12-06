@@ -7,6 +7,10 @@ class Ip extends Model {
     user () {
         return this.belongsTo('App/Models/User')
     }
+
+    router () {
+        return this.belongsTo('App/Models/Router')
+    }
 }
 
 module.exports = Ip
