@@ -4,10 +4,11 @@
 const Model = use('Freesgen/Adonis/BaseModel')
 
 class BaseModel extends Model{
-  
+
   static boot () {
     super.boot()
     this.addTrait('uuids')
+    this.addTrait('ScoutSearch')
   }
 
   static get incrementing () {
