@@ -2,6 +2,10 @@
 
 const Event = use('Event');
 const Database = use('Database')
+// const Sphinx = require('sphinx-promise');
+const SphinxClient = require ("sphinxapi"),
+	util = require('util'),
+	assert = require('assert');
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -24,8 +28,22 @@ class BaseController  {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
+ 
+
   async index ({auth, request, response}) {
     let query = request.get();
+    // const sphinx = new Sphinx();
+    const cl = new SphinxClient();
+    // cl.SetServer('127.0.0.1', 9306);
+    // cl.Status(function(err, result) {
+		// assert.ifError(err);
+		//   console.log(util.inspect(result, false, null, true));
+    // })
+    let querys = 'jesus | guerrero';
+    // let result = await sphinx.query(querys);
+
+    // console.log(result);
+    // return
 
     if (auth && (!query.filter || !query.filter.company_id || query.filter.company_id != auth.user.company_id ) ) {
       const filters  =  Object.assign(query.filter || {} , { company_id: auth.user.company_id})
