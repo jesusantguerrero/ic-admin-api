@@ -27,6 +27,10 @@ class BaseController  {
   async index ({auth, request, response}) {
     let query = request.get();
 
+    if (query.search) {
+      return response.json(await this.model.query().search(query.search).fetch());
+    }
+
     if (auth && (!query.filter || !query.filter.company_id || query.filter.company_id != auth.user.company_id ) ) {
       const filters  =  Object.assign(query.filter || {} , { company_id: auth.user.company_id})
       query.filter = filters;
@@ -47,13 +51,13 @@ class BaseController  {
   async store ({ auth, request, response }) {
     const formData = request.all();
     let resource;
-    
+
     if (this.model.customCreationHook && auth) {
       this.model.customCreationHook(formData, auth)
     }
-    
+
     const transaction = await Database.beginTransaction()
-    
+
     try {
         resource = await this.model.create(formData, transaction)
     } catch (e) {
@@ -142,10 +146,10 @@ class BaseController  {
         status: {
           message: "User nor found"
         }
-      });                                             
- 
+      });
+
     }
-    
+
     try{
      await resource.delete()
     } catch(e) {
