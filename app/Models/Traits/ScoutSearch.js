@@ -1,15 +1,19 @@
 'use strict'
+const SearchJobs = use('App/Domain/Search/Jobs/Index');
 
 class ScoutSearch {
   register (Model, customOptions = {}) {
     const defaultOptions = {}
     const options = Object.assign(defaultOptions, customOptions)
 
-    Model.useConnection = Model.searchable ? "mysql_read" : false;
-
+    
     Model.queryMacro('search', function (value) {
       this.table(Model.searchTable).whereRaw(`MATCH('${value}')`);
       return this;
+    })
+    
+    Model.addHook('beforeUpdate', function(modelInstance) {
+      Model.useConnection = false;
     })
 
     Model.addHook('afterCreate', function (modelInstance) {
@@ -17,13 +21,13 @@ class ScoutSearch {
     })
 
     Model.addHook('afterSave', function (modelInstance) {
-      modelInstance.toSearchableArray();
-
+      SearchJobs.add({model: modelInstance, newRecord: modelInstance.toJSON()})
+      return
     })
-
+    
     Model.addHook('afterUpdate', function (modelInstance) {
-      modelInstance.toSearchableArray();
-
+      SearchJobs.add({model: modelInstance, newRecord: modelInstance.toJSON()})
+      return
     })
 
     Model.addHook('afterDelete', function (modelInstance) {

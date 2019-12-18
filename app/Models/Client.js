@@ -19,15 +19,11 @@ class Client extends Model {
     }
 
     static get searchTable() {
-      return 'test1';
+      return 'clients';
     }
 
     static customCreationHook(formData, auth) {
         formData.company_id = auth.user.company_id;
-    }
-
-    static get connection() {
-        return 'mysql_sphinx';
     }
 
     // getters

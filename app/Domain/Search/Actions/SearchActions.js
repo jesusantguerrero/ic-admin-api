@@ -5,8 +5,8 @@ class SearchAction {
         this.model = model;
     }
 
-    update(model) {
-
+    static async create(model, data) {
+      const userId = await Database.table(model.table).insert(data)
     }
 
     delete(model) {

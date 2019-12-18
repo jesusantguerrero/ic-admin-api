@@ -1,7 +1,10 @@
 const Queue = require('bull');
-const createIpQueue = new Queue('create ips', 'redis://127.0.0.1:6379');
-const createIpQueueProcess = use('App/Domain/Network/Jobs/CreateIpJobs') 
+const createSearchRowQueue = new Queue('create search row', 'redis://127.0.0.1:6379');
+const SearchActions = use('App/Domain/Search/Actions/SearchActions'); 
 
-createIpQueue.process(createIpQueueProcess);
+createSearchRowQueue.process(async function(job, done) {
+    SearchActions.create(job.data.model, job.data.newRecord)
+    done();
+});
 
-module.exports = createIpQueue;
+module.exports = createSearchRowQueue;
