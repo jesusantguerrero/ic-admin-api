@@ -1,7 +1,7 @@
 const Database = use('Database');
 
 class SearchAction {
-    constructor(model) {
+    constructor() {
         this.model = model;
     }
 
