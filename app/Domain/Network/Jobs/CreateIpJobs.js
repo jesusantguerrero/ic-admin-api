@@ -8,16 +8,16 @@ module.exports = async (job, done) => {
     const router = job.data.router;
 
     await Ip.create({
-         router_id: router.id,
-         company_id: router.company_id,
-         index: currentIp,
-         final_code: `${router.base_ip}${router.codigo_area}.${currentIp}`,
-         status: getStatus(currentIp)
-     })
+        router_id: router.id,
+        company_id: router.company_id,
+        index: currentIp,
+        final_code: `${router.base_ip}${router.codigo_area}.${currentIp}`,
+        status: getStatus(currentIp)
+    })
 
      // transcode video asynchronously and report progress
      job.progress(currentIp / totalIps * 100);
- }
+  }
 
   // call done when finished
   done();
