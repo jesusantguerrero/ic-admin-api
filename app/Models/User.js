@@ -6,7 +6,7 @@ const Hash = use('Hash')
 const BaseModel = require('./BaseModel')
 
 class User extends BaseModel{
-  
+
   static boot () {
     super.boot()
 
@@ -25,6 +25,10 @@ class User extends BaseModel{
 
   static get hidden () {
     return ['password']
+  }
+
+  static get creationFields() {
+    return ['email','username', 'password']
   }
 
   /**

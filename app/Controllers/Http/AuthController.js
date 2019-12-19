@@ -9,7 +9,7 @@ class AuthController {
     }
 
     async registration ({auth, request, response }) {
-        const credentials = request.all();
+        const credentials = request.only(User.creationFields);
         try {
             await User.create(credentials)
         } catch (e) {
