@@ -1,7 +1,7 @@
 'use strict'
 const BaseController = require('./BaseController');
 const Invoice = use('App/Models/Invoice')
-const InvoiceAction = use('App/Actions/InvoiceAction')
+const InvoiceAction = use('App/Domain/Invoice/Actions/InvoiceAction')
 const Database = use('Database')
 /**
  * Resourceful controller for interacting with labels
