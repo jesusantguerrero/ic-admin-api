@@ -33,8 +33,7 @@ class BaseController  {
       const filters  =  Object.assign(query.filter || {} , { company_id: auth.user.company_id})
       query.filter = filters;
     }
-    console.log(query);
-    return response.json(await this.model.getFromQuery(query, true));
+    return response.json(await this.model.getFromQuery(query));
   }
 
 
