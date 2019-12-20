@@ -2,16 +2,18 @@
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = require('./BaseModel')
+const ContractJobs = use('App/Domain/Contract/Jobs/Index');
 
 class Contract extends Model {
     static boot () {
         super.boot()
 
         this.addHook('afterCreate', async (contract) => {
+           this.createInvoices(contract);
         })
-
+        
         this.addHook('afterSave', async (contract) => {
-         
+            this.createInvoices(contract);
         })
 
         this.addHook('beforeDelete', async (contract) => {
@@ -43,8 +45,13 @@ class Contract extends Model {
         this.belongsTo('App/Models/User')
     }
 
-    createInvoices() {
+    invoices() {
+        return this.hasMany('App/Models/Invoice', 'id', 'resource_id' )
+    }
 
+    static async createInvoices(ContractInstance) {
+        ContractJobs.add({contract: ContractInstance})
+        return;
     }
 
     assingnIp() {

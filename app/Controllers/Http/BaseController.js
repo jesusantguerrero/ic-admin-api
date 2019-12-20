@@ -62,7 +62,7 @@ class BaseController  {
         await transaction.rollback()
         return response.status(400).json({
             status: {
-                message: e
+                message: e.toString()
             }
         });
     }
