@@ -14,11 +14,13 @@ class Invoice extends Model {
 
         this.addHook('beforeCreate', async (InvoiceInstance) => {
             await Invoice.setNumber(InvoiceInstance)
+            InvoiceInstance.serie = InvoiceInstance.date.slice(0,4);
         })
 
         this.addHook('beforeSave', async (InvoiceInstance) => {
             await Invoice.setNumber(InvoiceInstance);
             await Invoice.checkPayments(InvoiceInstance);
+            InvoiceInstance.serie = InvoiceInstance.date.slice(0,4);
         })
 
         this.addHook('beforeDelete', async (InvoiceInstance) => {
@@ -70,7 +72,8 @@ class Invoice extends Model {
         if (isInvalidNumber) {
             const result = await Database.table('invoices').where({
                 company_id: InvoiceInstance.company_id,
-                resource_type_id: InvoiceInstance.resource_type_id
+                resource_type_id: InvoiceInstance.resource_type_id,
+                date: InvoiceInstance.date
             }).max('number as number');
             InvoiceInstance.number = Number(result[0].number) + 1;
         }
