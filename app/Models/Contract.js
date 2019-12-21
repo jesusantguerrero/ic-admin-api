@@ -13,7 +13,11 @@ class Contract extends Model {
         })
         
         this.addHook('afterSave', async (contract) => {
-            this.createInvoices(contract);
+            // await contract.assingnIp();
+        })
+
+        this.addHook('afterUpdate', async (contract) => {
+           await contract.assingnIp();
         })
 
         this.addHook('beforeDelete', async (contract) => {
@@ -54,8 +58,13 @@ class Contract extends Model {
         return;
     }
 
-    assingnIp() {
+    async assingnIp() {
+        await this.ip().where({id: this.ip_id}).update({ status: 1})
+    }
 
+    async releaseIp() {
+        this.last_ip = this.ip_id;
+        await this.ip().where({id: this.ip_id}).update({ status: 0})
     }
 
     static customCreationHook(formData, auth) {
