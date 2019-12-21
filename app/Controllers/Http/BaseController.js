@@ -36,7 +36,6 @@ class BaseController  {
     return response.json(await this.model.getFromQuery(query));
   }
 
-
   /**
    * Create/save a new ticket.
    * POST tickets
