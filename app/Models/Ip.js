@@ -11,6 +11,10 @@ class Ip extends Model {
     router () {
         return this.belongsTo('App/Models/Router')
     }
+
+    updateState(id, state) {
+        
+    }
 }
 
 module.exports = Ip

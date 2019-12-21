@@ -76,20 +76,6 @@ class BaseController  {
     return response.json(resource);
   }
 
-  /**
-   * Display a single ticket.
-   * GET tickets/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async show ({ params, request, response}) {
-    const query = request.get();
-    return response.json(await this.model.getFromQuery(query, params.id));
-  }
-
 
   /**
    * Update ticket details.
