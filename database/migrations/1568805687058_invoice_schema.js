@@ -12,7 +12,8 @@ class InvoiceSchema extends Schema {
       table.uuid('resource_type_id', 36).nullable();
       table.uuid('client_id', 36);
       table.uuid('user_id', 36);
-      table.integer('number')
+      table.integer('serie', 4)
+      table.integer('number', 6)
       table.date('date');
       table.date('due_date');
 
