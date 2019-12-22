@@ -20,7 +20,6 @@ class Invoice extends Model {
         this.addHook('beforeSave', async (InvoiceInstance) => {
             await Invoice.setNumber(InvoiceInstance);
             await Invoice.checkPayments(InvoiceInstance);
-            InvoiceInstance.serie = InvoiceInstance.date.slice(0,4);
         })
 
         this.addHook('beforeDelete', async (InvoiceInstance) => {
@@ -111,6 +110,22 @@ class Invoice extends Model {
             }
             resolve()
         })
+    }
+
+    async updateService({serviceId, oldServiceId, amount}) {
+        const service = await Service.find(serviceId)
+
+        await LineItem.query().where({
+            invoice_id: this.id,
+            service_id: oldServiceId,
+        }).update({
+            amount: amount,
+            concept: service.name,
+            price: amount,
+            service_id: serviceId,
+            service_name: service.name,
+        })
+        return true;
     }
 
     createPaymentDoc(formData) {
