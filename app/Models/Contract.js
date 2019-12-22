@@ -3,6 +3,7 @@
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = require('./BaseModel')
 const ContractJobs = use('App/Domain/Contract/Jobs/Index');
+const contractActions = use('App/Domain/Contract/Actions/ContractActions'); 
 
 class Contract extends Model {
     static boot () {
@@ -60,6 +61,7 @@ class Contract extends Model {
 
     async upgrade(oldServiceId) {
         ContractJobs.add('upgradeInvoices', {contract: this, oldServiceId: oldServiceId})
+        // await contractActions.upgradeInvoices(this, oldServiceId);
         return;
     }
 

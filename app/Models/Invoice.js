@@ -19,6 +19,7 @@ class Invoice extends Model {
 
         this.addHook('beforeSave', async (InvoiceInstance) => {
             await Invoice.setNumber(InvoiceInstance);
+            await Invoice.calculateTotal(InvoiceInstance);
             await Invoice.checkPayments(InvoiceInstance);
         })
 
@@ -125,6 +126,7 @@ class Invoice extends Model {
             service_id: serviceId,
             service_name: service.name,
         })
+        this.save();
         return true;
     }
 
@@ -141,6 +143,15 @@ class Invoice extends Model {
     async deletePaymentDoc(id) {
         const payment = await PaymentDoc.find(id);
         return payment.delete();
+    }
+
+    static async calculateTotal(invoice) {
+       if (invoice) {
+           const total = await LineItem.query().where({invoice_id: invoice.id}).sum('amount as amount').sum('discount as discount').sum('price  as subtotal')
+           invoice.subtotal = parseFloat(total[0]['subtotal'] || 0);
+           invoice.discount = parseFloat(total[0]['discount'] || 0);
+           invoice.total = parseFloat(total[0]['amount'] || 0);
+        }
     }
 
     static async checkPayments(invoice) {
