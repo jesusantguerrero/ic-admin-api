@@ -54,7 +54,12 @@ class Contract extends Model {
     }
 
     static async createInvoices(ContractInstance) {
-        ContractJobs.add({contract: ContractInstance})
+        ContractJobs.add('createInvoices', {contract: ContractInstance})
+        return;
+    }
+
+    async upgrade(oldServiceId) {
+        ContractJobs.add('upgradeInvoices', {contract: this, oldServiceId: oldServiceId})
         return;
     }
 

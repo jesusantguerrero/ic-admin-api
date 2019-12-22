@@ -1,5 +1,7 @@
 const InvoiceAction = use('App/Domain/Invoice/Actions/InvoiceAction');
+const Invoice = use('App/Models/Invoice');
 const { addMonths, format } = require('date-fns');
+const contractActions = use('App/Domain/Contract/Actions/ContractActions'); 
 
 const contractJobs = {
   createInvoices: async (job, done) => {
@@ -45,6 +47,12 @@ const contractJobs = {
     }
 
     // call done when finished
+    done();
+  },
+
+  upgradeInvoices: async (job, done) => {
+    const contract = job.data.contract;
+    await contractActions.upgradeInvoices(contract, job.data.oldServiceId);
     done();
   },
 

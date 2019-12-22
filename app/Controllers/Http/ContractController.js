@@ -25,6 +25,7 @@ class ContractController extends BaseController {
    */
   async update ({ params, request, response }) {
     const resource = await this.model.find(params.id)
+    let oldServiceId;
     if (!resource) {
       return response.status(400).json({
         status: {
@@ -35,16 +36,26 @@ class ContractController extends BaseController {
 
     const updateData = request.all();
     
+    //  handle ip change
     if (updateData.ip_id != resource.ip_id) {
        resource.releaseIp();
+    }
+
+    // handle service upgrade
+    if (updateData.service_id != resource.service_id) {
+      oldServiceId = resource.service_id;
     }
 
     resource.merge(updateData);
 
     try{
-     await resource.save();
+      await resource.save();
       if (this.modelName) {
         Event.fire(`updated::${this.modelName}`, resource)
+      }
+
+      if (oldServiceId) {
+        resource.upgrade(oldServiceId);
       }
     } catch(e) {
       return response.status(400).json({
