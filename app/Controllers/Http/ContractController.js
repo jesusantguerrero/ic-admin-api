@@ -35,7 +35,7 @@ class ContractController extends BaseController {
     }
 
     const updateData = request.all();
-    
+
     //  handle ip change
     if (updateData.ip_id != resource.ip_id) {
        resource.releaseIp();
@@ -57,6 +57,39 @@ class ContractController extends BaseController {
       if (oldServiceId) {
         resource.upgrade(oldServiceId);
       }
+    } catch(e) {
+      return response.status(400).json({
+        status: {
+          message: e.toString()
+        }
+      });
+    }
+
+    return response.json(resource)
+  }
+    /**
+   * Extend contract
+   * POST contracts/:id/extend
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   */
+  async extend ({ params, request, response }) {
+    const resource = await this.model.find(params.id)
+
+    if (!resource) {
+      return response.status(400).json({
+        status: {
+          message: "resource not found"
+        }
+      });
+    }
+
+    const extendData = request.all();
+
+    try{
+      await resource.addMonths(extendData.duration);
     } catch(e) {
       return response.status(400).json({
         status: {

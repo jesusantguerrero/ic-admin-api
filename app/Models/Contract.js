@@ -1,24 +1,25 @@
 'use strict'
 
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
-const Model = require('./BaseModel')
+const Model = require('./BaseModel');
+const Invoice = use('App/Models/Invoice');
 const ContractJobs = use('App/Domain/Contract/Jobs/Index');
-const contractActions = use('App/Domain/Contract/Actions/ContractActions'); 
+const contractActions = use('App/Domain/Contract/Actions/ContractActions');
 
 class Contract extends Model {
     static boot () {
         super.boot()
 
         this.addHook('afterCreate', async (contract) => {
-           this.createInvoices(contract);
+          this.createInvoices(contract);
         })
-        
+
         this.addHook('afterSave', async (contract) => {
             // await contract.assingnIp();
         })
 
         this.addHook('afterUpdate', async (contract) => {
-           await contract.assingnIp();
+          await contract.assingnIp();
         })
 
         this.addHook('beforeDelete', async (contract) => {
@@ -29,7 +30,7 @@ class Contract extends Model {
     ip() {
         return this.belongsTo('App/Models/Ip')
     }
-    
+
     client() {
         return this.belongsTo('App/Models/Client')
     }
@@ -45,7 +46,7 @@ class Contract extends Model {
     price() {
         return this.belongsTo('App/Models/Service')
     }
-    
+
     user() {
         this.belongsTo('App/Models/User')
     }
@@ -63,6 +64,16 @@ class Contract extends Model {
         ContractJobs.add('upgradeInvoices', {contract: this, oldServiceId: oldServiceId})
         // await contractActions.upgradeInvoices(this, oldServiceId);
         return;
+    }
+
+    async lastInvoiceDate() {
+        let lastInvoice = await Invoice.query().where({resource_id: this.id}).select('due_date').orderBy('due_date', 'DESC').limit(2).fetch();
+        lastInvoice = lastInvoice.toJSON()
+        return lastInvoice[0]['due_date'];  //Date
+    }
+
+    async addMonths(duration) {
+        return await contractActions.extendContract(this, duration);
     }
 
     async assingnIp() {

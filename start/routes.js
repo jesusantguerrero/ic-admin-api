@@ -40,6 +40,8 @@ Route.group(() => {
     Route.resource('services', 'ServiceController').apiOnly()
     Route.resource('prices', 'PriceController').apiOnly()
     Route.resource('contracts', 'ContractController').apiOnly()
+    Route.post('contracts/:id/extend', 'ContractController.extend')
+
     Route.resource('payments', 'PaymentController').apiOnly()
     Route.resource('payment_docs', 'PaymentDocsController').apiOnly()
 
