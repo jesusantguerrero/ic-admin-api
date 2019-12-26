@@ -1,7 +1,10 @@
 'use strict'
 const BaseController = require('./BaseController');
 const Invoice = use('App/Models/Invoice')
+const Contract = use('App/Models/Contract')
 const InvoiceAction = use('App/Domain/Invoice/Actions/InvoiceAction')
+const ContractJobs = use('App/Domain/Contract/Jobs/Index');
+const contractActions = use('App/Domain/Contract/Actions/ContractActions');
 const Database = use('Database')
 /**
  * Resourceful controller for interacting with labels
@@ -219,7 +222,10 @@ class InvoiceController extends BaseController{
     try{
       paymentDoc = await resource.createPaymentDoc(data).catch(e => console.log(e))
       await resource.save();
-
+      if (resource.resource_parent_type == 'CONTRACT') {
+        const contract = await Contract.find(resource.resource_id);
+        contractActions.checkInvoicesStatus(contract)
+      }
     } catch(e) {
         return response.status(400).json({
           status: {

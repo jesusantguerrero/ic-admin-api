@@ -24,7 +24,6 @@ class Invoice extends Model {
         
         this.addHook('afterSave', async(InvoiceInstance) => {
             await Invoice.calculateTotal(InvoiceInstance);
-
         })
 
         this.addHook('beforeDelete', async (InvoiceInstance) => {
