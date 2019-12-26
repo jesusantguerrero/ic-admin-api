@@ -34,6 +34,8 @@
     "bull": "^3.12.1",
     "date-fns": "^2.8.1",
     "got": "^10.0.1",
+    "lodash": "^4.17.15",
+    "lodash-es": "^4.17.15",
     "mysql": "^2.16.0",
     "sphinx-promise": "^1.0.7",
     "sphinxapi": "^1.3.0",

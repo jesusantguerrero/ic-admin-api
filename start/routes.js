@@ -68,6 +68,11 @@ Route.group(() => {
 
     // toggl timing
     Route.resource('time-entries', 'TimeEntryController').apiOnly()
+    
+    // reports
+    Route.get('reports/', 'ReportController.index')
+    Route.get('reports/:id', 'ReportController.index')
+
 
 }).prefix('api/v1').middleware('auth')
 
