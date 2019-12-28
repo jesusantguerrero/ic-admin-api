@@ -56,6 +56,11 @@ const contractJobs = {
     done();
   },
 
+  cancelContract: async(job, done) => {
+    await contractActions.cancelContract(job.data.contract, job.data.cancelationData);
+    done()
+  },
+
   findNextDate(date)
   { 
     let localDate = date.split('-').map( digit => Number(digit.trim()));

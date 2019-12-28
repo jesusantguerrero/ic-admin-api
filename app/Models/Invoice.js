@@ -13,12 +13,12 @@ class Invoice extends Model {
         super.boot()
 
         this.addHook('beforeCreate', async (InvoiceInstance) => {
-            await Invoice.setNumber(InvoiceInstance)
             InvoiceInstance.serie = InvoiceInstance.date.slice(0,4);
+            await Invoice.setNumber(InvoiceInstance)
         })
 
         this.addHook('beforeSave', async (InvoiceInstance) => {
-            await Invoice.setNumber(InvoiceInstance);
+            // await Invoice.setNumber(InvoiceInstance);
             await Invoice.checkPayments(InvoiceInstance);
         })
         
@@ -33,12 +33,16 @@ class Invoice extends Model {
 
             lineItems.toJSON().forEach(async line => {
                 const service = await Service.find(line.service_id)
-                await service.updateStock();
+                if (service) {
+                    await service.updateStock();
+                }
             })
+
             await PaymentDoc
                     .query()
                     .where('resource_id', InvoiceInstance.id)
                     .delete()
+
             await LineItem.query()
                   .where('invoice_id', InvoiceInstance.id)
                   .delete()
@@ -60,23 +64,23 @@ class Invoice extends Model {
     static async setNumber(InvoiceInstance) {
         let isInvalidNumber = true;
 
-        if (InvoiceInstance.number) {
-            isInvalidNumber = await Database.table('invoices').where({
-                company_id: InvoiceInstance.company_id,
-                number: InvoiceInstance.number,
-                resource_type_id: InvoiceInstance.resource_type_id
-            }).whereNot({
-                id: InvoiceInstance.id
-            });
+        // if (InvoiceInstance.number && InvoiceInstance.status) {
+        //     isInvalidNumber = await Database.table('invoices').where({
+        //         company_id: InvoiceInstance.company_id,
+        //         number: InvoiceInstance.number,
+        //         resource_type_id: InvoiceInstance.resource_type_id
+        //     }).whereNot({
+        //         id: InvoiceInstance.id
+        //     });
 
-            isInvalidNumber = isInvalidNumber.length
-        }
+        //     isInvalidNumber = isInvalidNumber.length
+        // }
 
         if (isInvalidNumber) {
             const result = await Database.table('invoices').where({
                 company_id: InvoiceInstance.company_id,
+                serie: InvoiceInstance.serie,
                 resource_type_id: InvoiceInstance.resource_type_id,
-                date: InvoiceInstance.date
             }).max('number as number');
             InvoiceInstance.number = Number(result[0].number) + 1;
         }
@@ -91,7 +95,7 @@ class Invoice extends Model {
                 }
 
                 items.forEach(async (item) => {
-                    if (!item.service_name) {
+                    if (!item.service_name && item.service_id) {
                         item.service_name = await Service.find(item.service_id)
                         item.service_name = item.service_name.name
                     }
@@ -109,6 +113,18 @@ class Invoice extends Model {
                         id: uuid()
                     })
                 })
+            } catch(e) {
+                console.log(e)
+            }
+            resolve()
+        })
+    }
+    
+    async removeLines() {
+        return new Promise(async (resolve) => {
+            try {
+                await LineItem.query().where('invoice_id', this.id).delete();
+
             } catch(e) {
                 console.log(e)
             }
