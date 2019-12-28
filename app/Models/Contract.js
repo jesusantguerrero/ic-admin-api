@@ -3,6 +3,7 @@
 /** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = require('./BaseModel');
 const Invoice = use('App/Models/Invoice');
+const Ip = use('App/Models/Ip');
 const ContractJobs = use('App/Domain/Contract/Jobs/Index');
 const contractActions = use('App/Domain/Contract/Actions/ContractActions');
 
@@ -22,9 +23,7 @@ class Contract extends Model {
           await contract.assingnIp();
         })
 
-        this.addHook('beforeDelete', async (contract) => {
-
-        })
+       
     }
 
     ip() {
@@ -76,15 +75,23 @@ class Contract extends Model {
         return await contractActions.extendContract(this, duration);
     }
 
+    cancel(cancelationData) {
+        ContractJobs.add('cancelContract', {contract: this, cancelationData})
+        return
+        // return contractActions.cancelContract(this, cancelationData);
+    }
+
     async assingnIp() {
         await this.ip().where({id: this.ip_id}).update({ status: 1})
     }
 
     async releaseIp() {
-        this.last_ip = this.ip_id;
-        await this.ip().where({id: this.ip_id}).update({ status: 0})
+        if (this.ip_id) {
+            this.last_ip = this.ip_id;
+            await this.ip().where({id: this.ip_id}).update({ status: 0})
+        }
     }
-
+    
     static customCreationHook(formData, auth) {
         formData.company_id = auth.user.company_id;
         formData.user_id = auth.user.id;

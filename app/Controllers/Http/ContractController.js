@@ -67,7 +67,8 @@ class ContractController extends BaseController {
 
     return response.json(resource)
   }
-    /**
+  
+  /**
    * Extend contract
    * POST contracts/:id/extend
    *
@@ -90,6 +91,39 @@ class ContractController extends BaseController {
 
     try{
       await resource.addMonths(extendData.duration);
+    } catch(e) {
+      return response.status(400).json({
+        status: {
+          message: e.toString()
+        }
+      });
+    }
+
+    return response.json(resource)
+  }
+    /**
+   * cancel contract
+   * POST contracts/:id/cancel
+   *
+   * @param {object} ctx
+   * @param {Request} ctx.request
+   * @param {Response} ctx.response
+   */
+  async cancel ({ params, request, response }) {
+    const resource = await this.model.find(params.id)
+
+    if (!resource) {
+      return response.status(400).json({
+        status: {
+          message: "resource not found"
+        }
+      });
+    }
+
+    const cancelationData = request.all();
+
+    try{
+      await resource.cancel(cancelationData);
     } catch(e) {
       return response.status(400).json({
         status: {

@@ -4,4 +4,5 @@ const contractJobs = use('App/Domain/Contract/Jobs/ContractJobs');
 
 contractQueue.process('createInvoices', contractJobs.createInvoices);
 contractQueue.process('upgradeInvoices', contractJobs.upgradeInvoices);
+contractQueue.process('cancelContract', contractJobs.cancelContract);
 module.exports = contractQueue;
