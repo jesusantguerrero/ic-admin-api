@@ -11,12 +11,20 @@ class CategoryController {
 
   async index(context) {
     const id = context.params.id
+    let responseData;
     switch (id) {
       case 'revenue':
-        return this.revenueReport(context);
+        responseData = this.revenueReport(context);
+        break
+      case 'clients':
+        responseData = this.clientsChange(context)
+        break
       default:
-        return this.cashFlowReport(context);
+        responseData = this.cashFlowReport(context);
+        break
     }
+
+    return responseData;
   }
 
   async revenueReport({response}) {
@@ -42,6 +50,29 @@ class CategoryController {
         total: lodash.sumBy(previousYearResult[0], 'total')
       }
     });
+  }
+
+  async clientsChange({response}) {
+    let dates = [];
+    let interval = 'MONTH';
+    for (let index = 0; index < 12; index++) {
+      if (index == 0) {
+        dates.push(`select DATE_FORMAT(SUBDATE(CURRENT_DATE(),INTERVAL ${index} ${interval}), '%Y%m') as dateUnit`);
+      } else {
+        dates.push(`union all select DATE_FORMAT(SUBDATE(CURRENT_DATE(),INTERVAL ${index} ${interval}), '%Y%m')`);
+      }
+    }
+
+    const sql = `select 
+    dates.dateUnit as unit, count(c.id) as total
+    FROM (${dates.join(' ')}) as dates
+    LEFT JOIN clients c ON DATE_FORMAT(c.created_at, '%Y%m') = dates.dateUnit
+    GROUP BY dates.dateUnit
+    `
+
+    // return response.send(sql);
+    const results = await Database.raw(sql);
+    return response.json(results[0]);
   }
   
   async cashFlowReport({response}) {

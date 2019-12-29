@@ -67,9 +67,9 @@ module.exports = {
         })
     },
 
-    async extendContract(contract, monthsToAdd) {
+    async extendContract(contract, monthsToAdd, date) {
       return new Promise(async (resolve) => {
-        let lastInvoiceDate = await contract.lastInvoiceDate();
+        let lastInvoiceDate = date || await contract.lastInvoiceDate();
         lastInvoiceDate = format(lastInvoiceDate, 'yyyy-MM-dd')
         const day = new Date(lastInvoiceDate).getDate();
         const nextPaymentDate = this.findNextDate(lastInvoiceDate, day);
@@ -146,6 +146,7 @@ module.exports = {
             }
             await Database.query().from('contracts').where({id: contract.id}).update({ status: 'canceled'})
             await Cancelation.create(cancelationEntry)
+            await this.checkInvoicesStatus(contract);
           }
           resolve(true)
       })
@@ -168,6 +169,10 @@ module.exports = {
       })
     },
 
+    reconnectContract(contract, reconnectionData) {
+      this.extendContract(contract, reconnectionData['duration'], reconnectionData['date'])
+    },
+
     async releaseIp(contractId, ipId) {
       if (ipId && contractId) {
           await Database.query().from('contracts').where({id: contractId }).update({ last_ip: ipId})
@@ -184,8 +189,10 @@ module.exports = {
           }
           const totalPaid = await Database.query().from('invoices').where({resource_id: contract.id, status: 'paid'}).count('id as paidTotal')
           const totalLate = await Database.query().from('invoices').where({resource_id: contract.id, status: 'late'}).count('id as lateTotal')
+          const duration = await Database.query().from('invoices').where({resource_id: contract.id}).count('id as duration')
           updateData.paid = parseFloat(totalPaid[0]['paidTotal'] || 0);
           updateData.late = parseFloat(totalLate[0]['lateTotal'] || 0);
+          updateData.duration =  parseFloat(duration[0]['duration'] || 0)
           updateData.status = this.checkStatus(updateData);
           await Database.query().from('contracts').where({id: contract.id}).update(updateData);
         }
