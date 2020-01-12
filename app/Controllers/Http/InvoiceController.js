@@ -6,6 +6,8 @@ const InvoiceAction = use('App/Domain/Invoice/Actions/InvoiceAction')
 const ContractJobs = use('App/Domain/Contract/Jobs/Index');
 const contractActions = use('App/Domain/Contract/Actions/ContractActions');
 const Database = use('Database')
+const Drive = use('Drive')
+const Helpers = use('Helpers');
 /**
  * Resourceful controller for interacting with labels
  */
@@ -257,6 +259,51 @@ class InvoiceController extends BaseController{
     }
   }
 
+  async upload({params, response, request}) {
+    const resource = await this.model.find(params.id)
+    let error;
+
+    if (resource) {
+      try {
+        request.multipart.file('logo', {}, async (file) => {
+          console.log(file)
+          const filename = `${params.id}.${file.extname}`;
+          
+          await Drive.put(filename,  file.stream)
+          resource.logo = `/uploads/${filename}`
+          await resource.save();
+  
+          return response.json({
+            filename: `/uploads/${filename}`
+          });
+        })
+
+        await request.multipart.process()
+        // await profilePic.move(Helpers.tmpPath('uploads'), {
+        //   name: filename,
+        //   overwrite: true
+        // })
+
+        // if (!profilePic.moved()) {
+        //   console.log(profilePic.error())
+        //   throw profilePic.error()
+        // }
+
+      } catch (e) {
+        return response.status(401).json({
+          status: {
+            message: e.toString()
+          }
+        })
+      }
+    } else {
+      return response.status(401).json({
+        status: {
+          message: 'resource not found'
+        }
+      })
+    }
+  }
 }
 
 module.exports = InvoiceController

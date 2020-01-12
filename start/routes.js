@@ -53,7 +53,8 @@ Route.group(() => {
     Route.post('invoices/:id/payment', 'InvoiceController.addPayment')
     Route.post('invoices/:id/payment/:contractId', 'InvoiceController.addPayment')
     Route.delete('invoices/:id/payment/:paymentId', 'InvoiceController.deletePayment')
-    Route.post('invoices/send', 'InvoiceController.sendEmail')
+    Route.post('invoices/:id/image', 'InvoiceController.upload')
+    Route.post('invoices/:id/send', 'InvoiceController.sendEmail')
 
     Route.resource('transaction-lines', 'TransactionLineController').apiOnly()
     Route.resource('transactions', 'TransactionController').apiOnly()

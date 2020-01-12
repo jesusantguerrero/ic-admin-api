@@ -57,22 +57,28 @@ class CategoryController {
     let interval = 'MONTH';
     for (let index = 0; index < 12; index++) {
       if (index == 0) {
-        dates.push(`select DATE_FORMAT(SUBDATE(CURRENT_DATE(),INTERVAL ${index} ${interval}), '%Y%m') as dateUnit`);
+        dates.push(`select DATE_FORMAT(SUBDATE(CURRENT_DATE(),INTERVAL ${index} ${interval}), '%Y-%m-01') as dateUnit`);
       } else {
-        dates.push(`union all select DATE_FORMAT(SUBDATE(CURRENT_DATE(),INTERVAL ${index} ${interval}), '%Y%m')`);
+        dates.push(`union all select DATE_FORMAT(SUBDATE(CURRENT_DATE(),INTERVAL ${index} ${interval}), '%Y-%m-01')`);
       }
     }
 
     const sql = `select 
-    dates.dateUnit as unit, count(c.id) as total
+    dates.dateUnit as unit, count(c.id) as total, DATE_FORMAT(CAST(dates.dateUnit as date), "%M") as month 
     FROM (${dates.join(' ')}) as dates
-    LEFT JOIN clients c ON DATE_FORMAT(c.created_at, '%Y%m') = dates.dateUnit
+    LEFT JOIN clients c ON DATE_FORMAT(c.created_at, '%Y-%m-01') = dates.dateUnit
     GROUP BY dates.dateUnit
     `
 
+    const sql2 = "select count(id) from clients as total";
+
     // return response.send(sql);
     const results = await Database.raw(sql);
-    return response.json(results[0]);
+    const results2 = await Database.raw(sql2);
+    return response.json({
+      total: results2[0]['total'],
+      values: results[0]
+    });
   }
   
   async cashFlowReport({response}) {
@@ -93,6 +99,7 @@ class CategoryController {
     const results = await Database.raw(sql);
     return response.json(results[0]);
   }
+
 }
 
 module.exports = CategoryController

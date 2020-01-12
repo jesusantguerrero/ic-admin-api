@@ -23,7 +23,8 @@ const providers = [
   '@adonisjs/websocket/providers/WsProvider',
   'adonisjs-querify/providers/Provider',
   '@adonisjs/validator/providers/ValidatorProvider',
-  '@adonisjs/mail/providers/MailProvider'
+  '@adonisjs/mail/providers/MailProvider',
+  '@adonisjs/drive/providers/DriveProvider'
 ]
 
 /*
