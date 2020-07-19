@@ -180,7 +180,6 @@ module.exports = {
       }
     },
 
-
     async checkInvoicesStatus(contract) {
       if (contract) {
           const updateData = {

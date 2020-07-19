@@ -52,7 +52,8 @@ class CategoryController {
     });
   }
 
-  async clientsChange({response}) {
+  async clientsChange({params, response}) {
+    const table = params.table
     let dates = [];
     let interval = 'MONTH';
     for (let index = 0; index < 12; index++) {
@@ -66,17 +67,17 @@ class CategoryController {
     const sql = `select 
     dates.dateUnit as unit, count(c.id) as total, DATE_FORMAT(CAST(dates.dateUnit as date), "%M") as month 
     FROM (${dates.join(' ')}) as dates
-    LEFT JOIN clients c ON DATE_FORMAT(c.created_at, '%Y-%m-01') = dates.dateUnit
+    LEFT JOIN ${table} c ON DATE_FORMAT(c.created_at, '%Y-%m-01') = dates.dateUnit
     GROUP BY dates.dateUnit
     `
 
-    const sql2 = "select count(id) from clients as total";
+    const sql2 = `select count(id) as total from ${table}`;
 
     // return response.send(sql);
     const results = await Database.raw(sql);
     const results2 = await Database.raw(sql2);
     return response.json({
-      total: results2[0]['total'],
+      total: results2[0][0].total,
       values: results[0]
     });
   }

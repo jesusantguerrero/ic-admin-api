@@ -239,11 +239,12 @@ class InvoiceController extends BaseController{
     return response.json(paymentDoc)
   }
 
-  async sendEmail({response}) {
+  async sendEmail({response, request}) {
+    const data = request.all();
     const invoiceAction = new InvoiceAction();
 
     try {
-      await invoiceAction.sendEmail();
+      await invoiceAction.sendEmail(data);
 
       return response.status(201).json({
         status: {

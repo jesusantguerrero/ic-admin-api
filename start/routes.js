@@ -75,6 +75,7 @@ Route.group(() => {
     // reports
     Route.get('reports/', 'ReportController.index')
     Route.get('reports/:id', 'ReportController.index')
+    Route.get('reports/progress/:table', 'ReportController.clientsChange')
 
 
 }).prefix('api/v1').middleware('auth')
