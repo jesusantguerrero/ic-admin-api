@@ -75,6 +75,8 @@ Route.group(() => {
     // reports
     Route.get('reports/', 'ReportController.index')
     Route.get('reports/:id', 'ReportController.index')
+    Route.get('reports/contacts/next-invoices', 'ReportController.nextInvoices')
+    Route.get('reports/contacts/debtors', 'ReportController.debtors')
     Route.get('reports/progress/:table', 'ReportController.clientsChange')
 
 

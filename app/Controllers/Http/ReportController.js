@@ -101,6 +101,40 @@ class CategoryController {
     return response.json(results[0]);
   }
 
+  async nextInvoices({ response }) {
+    const sql = `SELECT 
+      invoices.*, 
+      cl.display_name contact,
+      cl.id contact_id
+      FROM invoices
+      INNER JOIN clients cl ON cl.id = invoices.client_id
+      WHERE invoices.status = 'unpaid' AND invoices.due_date >= NOW() AND resource_type_id='INVOICE'
+    `
+
+    // return response.send(sql);
+    const results = await Database.raw(sql);
+    return response.json(results[0]);
+  }
+
+  async debtors({ response }) {
+    const sql = `SELECT 
+		GROUP_CONCAT(invoices.id) ids,
+		count(invoices.id) total_debts,
+      sum(invoices.debt) debt,
+      cl.display_name contact,
+      cl.id contact_id
+      FROM invoices
+      INNER JOIN clients cl ON cl.id = invoices.client_id
+		WHERE invoices.status = 'unpaid' AND invoices.due_date <= NOW() AND resource_type_id='INVOICE'
+		GROUP BY invoices.client_id
+    `
+  
+    // return response.send(sql);
+    const results = await Database.raw(sql);
+    return response.json(results[0]);
+  }
 }
+
+
 
 module.exports = CategoryController
